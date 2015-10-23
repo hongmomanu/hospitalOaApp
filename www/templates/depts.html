@@ -1,7 +1,7 @@
 <ion-view view-title="科室">
   <ion-content>
     <ion-list>
-      <ion-item  on-hold="show_broad_chat();" class="item item-avatar-left  item-icon-right" ng-repeat="dept in depts" href="#/app/depts/{{dept.id}}">
+      <ion-item  on-hold="show_broad_chat(dept.title);" class="item item-avatar-left  item-icon-right" ng-repeat="dept in depts" href="#/app/depts/{{dept.id}}">
 
         <i class="icon ion-android-contacts" style="left: 18px;"></i>
           <div class="deptname">{{dept.title}}</div>

@@ -21,12 +21,12 @@
                                  { :title  "妇科" :id 6 :persons 4 }
                                  ]))
 
-    (! $scope.show_broad_chat (fn[] (
+    (! $scope.show_broad_chat (fn [deptname]
 
-                                     println "show_broad_chat"
-                                      (.go $state "app.chatgroupinfo" (obj :chatId "1212" ) )
+                                (println "show_broad_chat" deptname)
+                                (.go $state "app.chatgroupinfo" (obj :deptId "1212" :deptName  deptname) )
 
-                                     )))
+                                ))
 
 
 

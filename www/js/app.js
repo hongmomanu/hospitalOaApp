@@ -80,7 +80,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     })
 
   .state('app.chatgroupinfo', {
-      url: '/chats/group/:chatId',
+    url: '/chats/group/:deptId:deptName',
       views: {
         'menuContent': {
           templateUrl: 'templates/chatgroupinfo.html',

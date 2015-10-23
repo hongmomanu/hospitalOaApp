@@ -1,4 +1,4 @@
-<ion-view view-title="Search">
+<ion-view view-title="{{deptname}}">
 
     <ion-header-bar frosted-bar class="bar-frosted">
         <h1 class="title">Blurred!</h1>
@@ -6,12 +6,16 @@
 
     <ion-content class="padding" start-y="120">
         <ol class="messages">
-          <li ng-repeat="message in messages" ng-bind-html="message.content"></li>
+          <li ng-repeat="message in messages" ng-bind-html="message.realname +message.content">
+
+
+
+            </li>
         </ol>
     </ion-content>
 
     <ion-footer-bar class="bar-frosted">
-        <button class="button button-clear button-positive" ng-click="add()">Add Message</button>
+        <button class="button button-clear button-positive" ng-click="addmessage()">Add Message</button>
     </ion-footer-bar>
 
 </ion-view>

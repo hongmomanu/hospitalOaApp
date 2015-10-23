@@ -3,6 +3,7 @@
             [hospitaloaapp.controllers.messages :as messages]
             [hospitaloaapp.controllers.message :as message ]
             [hospitaloaapp.controllers.depts :as depts]
+            [hospitaloaapp.controllers.dept :as dept]
             )
   (:use [jayq.core :only [$ css html]]
 
@@ -83,6 +84,7 @@
 (messages/init)
 (message/init)
 (depts/init)
+(dept/init)
 (println "Hello world initssssssss  sssssss!")
 
 

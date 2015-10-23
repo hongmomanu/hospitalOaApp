@@ -30,3 +30,15 @@
   margin-left: 10px;
 
 }
+.deptname{
+
+  margin-top: 10px;
+  vertical-align: middle;
+  margin-left: 10px;
+
+}
+.elementCenterAlign {
+    position: absolute;
+    top: 50% !important;
+    transform: translateY(-50%);
+}

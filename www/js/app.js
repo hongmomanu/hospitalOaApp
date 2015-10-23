@@ -51,6 +51,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
+   .state('app.deptperson', {
+     url: '/depts/:personId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/deptpersons.html',
+          controller: 'DeptCtrl'
+        }
+      }
+    })
+
   .state('app.browse', {
       url: '/browse',
       views: {
@@ -68,6 +78,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
+
 
   .state('app.single', {
     url: '/messages/:messageId',

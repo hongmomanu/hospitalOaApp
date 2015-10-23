@@ -1,0 +1,14 @@
+<ion-view view-title="科室">
+  <ion-content>
+    <ion-list>
+      <ion-item  on-hold="show_broad_chat();" class="item item-avatar-left  item-icon-right" ng-repeat="dept in depts" href="#/app/depts/{{dept.id}}">
+
+        <i class="icon ion-android-contacts" style="left: 18px;"></i>
+          <div class="deptname">{{dept.title}}</div>
+          <i class="badge badge-assertive item-note elementCenterAlign">{{dept.persons}}</i>
+          <i class="icon ion-ios-arrow-right"></i>
+
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

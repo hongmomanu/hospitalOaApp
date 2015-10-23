@@ -1,12 +1,6 @@
 /* Empty. Add your own CSS if you like */
 
-.menuname{
 
-  margin-top: 10px;
-  vertical-align: middle;
-  margin-left: 10px;
-
-}
 .blackmenu{
 
   border-color: #111;
@@ -22,4 +16,17 @@
   border-top: 1px solid;
   border-bottom: 1px solid;
   color: #F0F1F1;
+}
+.blackmenu .item-content {
+  background-color: transparent;
+  border-color: #444444;
+
+  color: #F0F1F1;
+}
+.menuname{
+
+  margin-top: 10px;
+  vertical-align: middle;
+  margin-left: 10px;
+
 }

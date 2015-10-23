@@ -79,6 +79,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     })
 
+  .state('app.chatgroupinfo', {
+      url: '/chats/group/:chatId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/chatgroupinfo.html',
+          controller: 'ChatGroupCtrl'
+        }
+      }
+    })
+
 
   .state('app.single', {
     url: '/messages/:messageId',

@@ -4,6 +4,7 @@
             [hospitaloaapp.controllers.message :as message ]
             [hospitaloaapp.controllers.depts :as depts]
             [hospitaloaapp.controllers.dept :as dept]
+            [hospitaloaapp.controllers.chatgroup :as chatgroup]
             )
   (:use [jayq.core :only [$ css html]]
 
@@ -85,6 +86,7 @@
 (message/init)
 (depts/init)
 (dept/init)
+(chatgroup/init)
 (println "Hello world initssssssss  sssssss!")
 
 

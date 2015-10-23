@@ -9,7 +9,7 @@
 
 
 (defn init []
-  (def.controller starter.controllers.DeptsCtrl [$scope]
+  (def.controller starter.controllers.DeptsCtrl [$scope $state]
   ;;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "messages")
     (! $scope.depts (clj->js [
@@ -24,6 +24,7 @@
     (! $scope.show_broad_chat (fn[] (
 
                                      println "show_broad_chat"
+                                      (.go $state "app.chatgroupinfo" (obj :chatId "1212" ) )
 
                                      )))
 

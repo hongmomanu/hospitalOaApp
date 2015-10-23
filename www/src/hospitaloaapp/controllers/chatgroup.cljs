@@ -39,6 +39,15 @@
        ))
 
 
+    (! $scope.doRefresh (fn[]
+
+                          (println "doRefresh")
+                          (.unshift $scope.messages (obj  :content (str "<p>" (rand-int 100) "</p>") :realname "<a>张燕芳</a>"))
+                          (.$broadcast $scope "scroll.refreshComplete")
+
+                          ))
+
+
 
   )
 

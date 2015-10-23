@@ -15,8 +15,10 @@
     </ion-content>
 
     <ion-footer-bar class="bar-frosted">
+        <button class="button button-clear button-icon ion-images button-positive" ng-click="addimage()"></button>
+        <button class="button button-clear button-icon ion-mic-a button-positive" ng-click="addvoice()"></button>
         <label class="item-input-wrapper">
-        <i   class="icon ion-ios-search placeholder-icon"></i>
+        <i   class="icon ion-ios-compose placeholder-icon"></i>
         <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="...">
 
         <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>-->

@@ -16,8 +16,10 @@
 
     (! $scope.deptname $stateParams.deptName)
 
+    (! $scope.messagetext "")
+
     (! $scope.addmessage (fn []
-                           (.push $scope.messages (obj  :content "<p>Is this magic?</p>" :realname "<a>张燕芳</a>"))
+                           (.push $scope.messages (obj  :content (str "<p>" $scope.messagetext "</p>") :realname "<a>张燕芳</a>"))
                            (.scrollBottom $ionicScrollDelegate true)
                            ) )
 

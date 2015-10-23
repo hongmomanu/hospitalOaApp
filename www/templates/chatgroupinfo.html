@@ -15,7 +15,13 @@
     </ion-content>
 
     <ion-footer-bar class="bar-frosted">
-        <button class="button button-clear button-positive" ng-click="addmessage()">Add Message</button>
+        <label class="item-input-wrapper">
+        <i   class="icon ion-ios-search placeholder-icon"></i>
+        <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="...">
+
+        <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>-->
+        </label>
+        <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addmessage()">发送</button>
     </ion-footer-bar>
 
 </ion-view>

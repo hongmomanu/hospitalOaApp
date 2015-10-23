@@ -82,6 +82,7 @@
 
 (messages/init)
 (message/init)
+(depts/init)
 (println "Hello world initssssssss  sssssss!")
 
 

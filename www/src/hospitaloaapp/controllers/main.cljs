@@ -1,7 +1,8 @@
 (ns hospitaloaapp.controllers.main
   (:require [clojure.browser.repl :as repl]
-            [hospitaloaapp.controllers.playlists :as messages ]
-            [hospitaloaapp.controllers.playlist :as playlist ]
+            [hospitaloaapp.controllers.messages :as messages]
+            [hospitaloaapp.controllers.message :as message ]
+            [hospitaloaapp.controllers.depts :as depts]
             )
   (:use [jayq.core :only [$ css html]]
 
@@ -80,7 +81,7 @@
 
 
 (messages/init)
-(playlist/init)
+(message/init)
 (println "Hello world initssssssss  sssssss!")
 
 

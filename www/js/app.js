@@ -41,6 +41,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
+  .state('app.depts', {
+    url: '/depts',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/depts.html',
+        controller: 'DeptsCtrl'
+      }
+    }
+  })
+
   .state('app.browse', {
       url: '/browse',
       views: {
@@ -60,14 +70,14 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     })
 
   .state('app.single', {
-    url: '/playlists/:playlistId',
+    url: '/messages/:messageId',
     views: {
       'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
+        templateUrl: 'templates/message.html',
+        controller: 'MessageCtrl'
       }
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/messages');
 });

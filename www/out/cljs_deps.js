@@ -7,4 +7,6 @@ goog.addDependency("../clojure/browser/repl.js", ['clojure.browser.repl'], ['goo
 goog.addDependency("../clojure/string.js", ['clojure.string'], ['goog.string', 'cljs.core', 'goog.string.StringBuffer']);
 goog.addDependency("../cljs/reader.js", ['cljs.reader'], ['goog.string', 'cljs.core', 'goog.string.StringBuffer']);
 goog.addDependency("../jayq/core.js", ['jayq.core'], ['cljs.core', 'clojure.string', 'cljs.reader']);
+goog.addDependency("../hospitaloaapp/controllers/playlists.js", ['hospitaloaapp.controllers.playlists'], ['clojure.browser.repl', 'cljs.core', 'jayq.core']);
+goog.addDependency("../hospitaloaapp/controllers/playlist.js", ['hospitaloaapp.controllers.playlist'], ['clojure.browser.repl', 'cljs.core', 'jayq.core']);
 goog.addDependency("../hospitaloaapp/controllers/main.js", ['hospitaloaapp.controllers.main'], ['clojure.browser.repl', 'cljs.core', 'jayq.core']);

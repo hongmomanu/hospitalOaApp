@@ -16,6 +16,11 @@
 
     (! $scope.deptname $stateParams.deptName)
 
+
+
+    (makemessage $stateParams.deptId $stateParams.deptName)
+
+
     (! $scope.messagetext "")
 
     (! $scope.addmessage (fn []
@@ -51,5 +56,24 @@
 
   )
 
+
+  )
+
+(defn makemessage [deptId deptName]
+
+    (println "makemessage"   (js->clj js/localStorage.messages))
+
+  (let [
+
+        messages (if (nil?  (js->clj js/localStorage.messages)) {} (js->clj (.parse js/JSON js/localStorage.messages)))
+
+          newmessages (conj messages { (keyword deptId) {:type "group" :name deptName :id deptId}})
+
+        ]
+    (println newmessages)
+
+    (! js/localStorage.messages (.stringify js/JSON (clj->js newmessages)))
+
+    )
 
   )

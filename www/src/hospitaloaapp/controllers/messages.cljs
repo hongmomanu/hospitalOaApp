@@ -9,21 +9,39 @@
 
 
 (defn init []
-  (def.controller starter.controllers.MessagesCtrl [$scope]
+  (def.controller starter.controllers.MessagesCtrl [$scope $rootScope]
   ;;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
   (println "messages")
-  (! $scope.messages (clj->js [
-                                 { :title "Reggaesss"  :id 1 }
-                                 { :title  "Chill"  :id 2 }
-                                 { :title  "Dubstep" :id 3 }
-                                 { :title  "Indie"  :id 4 }
-                                 { :title  "Rap" :id 5 }
-                                 { :title  "Cowbell" :id 6 }
-                                 ]))
+
+    (.$on $rootScope "messageslistupdate" (fn [event] (println "messageslistupdate")
+                                                      (! $scope.messages (getmessages))
+                                            ))
+
+  (! $scope.messages (getmessages))
 
 
-
-  )
 
 
   )
+
+  )
+
+(defn getmessages []
+
+  (let [
+        message  (js->clj js/localStorage.messages)
+        messages (if (nil? message) {} (js->clj (.parse js/JSON js/localStorage.messages)))
+
+        messagesclj (map #(get messages %) (keys messages))
+
+         ]
+
+
+     (clj->js messagesclj)
+
+
+
+     )
+
+  )
+

@@ -10,7 +10,7 @@
 
 (defn init []
 
-  (def.controller starter.controllers.ChatGroupCtrl [$scope  $ionicScrollDelegate $stateParams $compile]
+  (def.controller starter.controllers.ChatGroupCtrl [$scope   $rootScope $ionicScrollDelegate $stateParams $compile]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "ChatGroupCtrl" $stateParams)
 
@@ -18,7 +18,7 @@
 
 
 
-    (makemessage $stateParams.deptId $stateParams.deptName)
+
 
 
     (! $scope.messagetext "")
@@ -26,6 +26,7 @@
     (! $scope.addmessage (fn []
                            (.push $scope.messages (obj  :content (str "<p>" $scope.messagetext "</p>") :realname "<a>张燕芳</a>"))
                            (.scrollBottom $ionicScrollDelegate true)
+                           (makemessage $stateParams.deptId $stateParams.deptName $rootScope)
                            ) )
 
     (! $scope.messages (clj->js [
@@ -59,20 +60,25 @@
 
   )
 
-(defn makemessage [deptId deptName]
+(defn makemessage [deptId deptName $rootScope]
 
-    (println "makemessage"   (js->clj js/localStorage.messages))
+
 
   (let [
 
-        messages (if (nil?  (js->clj js/localStorage.messages)) {} (js->clj (.parse js/JSON js/localStorage.messages)))
+        message  (js->clj js/localStorage.messages)
+        messages (if (nil? message) {} (js->clj (.parse js/JSON js/localStorage.messages)))
 
-          newmessages (conj messages { (keyword deptId) {:type "group" :name deptName :id deptId}})
+
+        deloldmessages (dissoc messages  deptId)
+
+        newmessages (assoc deloldmessages (keyword deptId) {:type "group" :title deptName :id deptId})
 
         ]
-    (println newmessages)
+
 
     (! js/localStorage.messages (.stringify js/JSON (clj->js newmessages)))
+      (.$broadcast $rootScope "messageslistupdate")
 
     )
 

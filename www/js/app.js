@@ -91,7 +91,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
 
   .state('app.single', {
-    url: '/messages/:messageId',
+    url: '/messages/:messageId/:messageType',
     views: {
       'menuContent': {
         templateUrl: 'templates/message.html',

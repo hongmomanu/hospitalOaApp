@@ -1,8 +1,13 @@
 <ion-view view-title="消息">
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="message in messages" href="#/app/messages/{{message.id}}">
-        {{message.title}}
+      <ion-item class="item item-avatar-left  item-icon-right" ng-repeat="message in messages" href="#/app/messages/{{message.id}}/{{message.type}}">
+
+          <i class="icon ion-chatbox-working" style="left: 18px;"></i>
+          <div class="deptname">{{message.title}}</div>
+          <i class="badge badge-assertive item-note elementCenterAlign">{{message.nums}}</i>
+          <i class="icon ion-ios-arrow-right"></i>
+
       </ion-item>
     </ion-list>
   </ion-content>

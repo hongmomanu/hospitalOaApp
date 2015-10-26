@@ -12,7 +12,7 @@
 
   (def.controller starter.controllers.MessageCtrl [$scope $stateParams $compile]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
-    (println "MessageCtrl")
+    (println "MessageCtrl" $stateParams)
 
   )
 

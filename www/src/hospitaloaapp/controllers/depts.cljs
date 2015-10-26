@@ -9,10 +9,33 @@
 
 
 (defn init []
-  (def.controller starter.controllers.DeptsCtrl [$scope $state]
+
+  (def.service starter.DeptsService [$http]
+  (obj
+    :getdepts (fn []
+                (-> $http
+                  (.get (str js/serverurl "getdepts") )
+                  (.then (fn [response] response))))
+
+
+    ))
+
+
+  (def.controller starter.controllers.DeptsCtrl [$scope $ionicLoading $state DeptsService]
   ;;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "messages")
-    (! $scope.depts (clj->js [
+    (.show $ionicLoading (obj :template "加载中.."  :duration 5000))
+    (-> DeptsService
+                           (.getdepts)
+                           (.then (fn [response]
+                                    (.hide $ionicLoading)
+
+                                    ;(println (doall (map #(conj % {:title (:deptname %) }) response.data)))
+                                     (! $scope.depts response.data)
+
+                                    )))
+
+    #_(! $scope.depts (clj->js [
                                  { :title "信息科"  :id 1 :persons 5 }
                                  { :title  "骨科"  :id 2  :persons 6 }
                                  { :title  "眼科" :id 3 :persons 3 }

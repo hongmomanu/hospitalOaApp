@@ -4,6 +4,7 @@
             [hospitaloaapp.controllers.message :as message ]
             [hospitaloaapp.controllers.depts :as depts]
             [hospitaloaapp.controllers.dept :as dept]
+            [hospitaloaapp.controllers.user :as user]
             [hospitaloaapp.controllers.chatgroup :as chatgroup]
             )
   (:use [jayq.core :only [$ css html]]
@@ -47,41 +48,13 @@
 
 
 ;;加载初始化控制器
-(def.controller starter.controllers.AppCtrl [$scope $ionicModal $timeout  $ionicLoading $compile MapService]
+#_(def.controller starter.controllers.AppCtrl [$scope $ionicModal $timeout  $ionicLoading $compile MapService]
 
-  (! $scope.loginData  {})
-
-
-  (-> (.fromTemplateUrl  $ionicModal "templates/login.html" (clj->js {
-                                                                       :scope $scope
-                                                                       })) (.then  (fn [modal] (
-                                                                                                 ! $scope.modal modal
-                                                                                                 ))))
+  )
 
 
 
-
-
-
-
-
-
-  (! $scope.closeLogin (fn [] ( .hide $scope.modal
-                                )))
-
-  (! $scope.login (fn [] (.show $scope.modal )
-
-                    ))
-
-  (! $scope.doLogin (fn []
-
-                      ($timeout (fn [] (.closeLogin $scope)) 1000)
-
-                      )))
-
-
-
-
+(user/init)
 (messages/init)
 (message/init)
 (depts/init)

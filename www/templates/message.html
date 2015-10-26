@@ -1,5 +1,35 @@
-<ion-view view-title="Playlist">
-  <ion-content>
-    <h1>Playlist</h1>
-  </ion-content>
+<ion-view view-title="{{title}}">
+
+    <ion-header-bar frosted-bar class="bar-frosted">
+        <h1 class="title">Blurred!</h1>
+    </ion-header-bar>
+
+    <ion-content class="padding" start-y="120">
+        <ion-refresher
+            pulling-text="下拉加载..."
+            on-refresh="doRefresh()">
+        </ion-refresher>
+        <ol class="messages">
+          <li ng-repeat="message in messages" ng-bind-html="message.realname +message.content">
+
+
+
+            </li>
+        </ol>
+    </ion-content>
+
+    <ion-footer-bar class="bar-frosted">
+        <button class="button button-clear button-icon ion-images button-positive" ng-click="addimage()"></button>
+        <button class="button button-clear button-icon ion-mic-a button-positive" ng-click="addvoice()"></button>
+        <button class="button button-clear button-icon ion-videocamera button-positive" ng-click="addvideo()"></button>
+        <label class="item-input-wrapper">
+        <i   class="icon ion-ios-compose placeholder-icon"></i>
+        <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="...">
+
+        <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>-->
+        </label>
+        <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addmessage()">发送</button>
+    </ion-footer-bar>
+
 </ion-view>
+

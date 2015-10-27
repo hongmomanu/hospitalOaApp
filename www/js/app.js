@@ -91,8 +91,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     })
 
 
-  .state('app.single', {
-    url: '/messages/:messageId/:messageType',
+  .state('app.chatsingleinfo', {
+    url: '/chats/sigle/:messageId/:title',
     views: {
       'menuContent': {
         templateUrl: 'templates/message.html',

@@ -1,7 +1,7 @@
 <ion-view view-title="消息">
   <ion-content>
     <ion-list>
-      <ion-item class="item item-avatar-left  item-icon-right" ng-repeat="message in messages" href="#/app/messages/{{message.id}}/{{message.type}}">
+      <ion-item class="item item-avatar-left  item-icon-right" ng-repeat="message in messages" ng-click="showchatview(message)">
 
           <i class="icon ion-chatbox-working" style="left: 18px;"></i>
           <div class="deptname">{{message.title}}</div>

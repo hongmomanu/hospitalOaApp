@@ -5,7 +5,7 @@
             on-refresh="doRefresh()">
     </ion-refresher>
     <ion-list>
-      <ion-item  on-hold="show_broad_chat(dept.title);" class="item item-avatar-left  item-icon-right" ng-repeat="dept in depts" href="#/app/depts/{{dept.id}}">
+      <ion-item  on-hold="show_broad_chat(dept.title);" class="item item-avatar-left  item-icon-right" ng-repeat="dept in depts" href="#/app/depts/{{dept._id}}">
 
         <i class="icon ion-android-contacts" style="left: 18px;"></i>
           <div class="deptname">{{dept.title}}</div>

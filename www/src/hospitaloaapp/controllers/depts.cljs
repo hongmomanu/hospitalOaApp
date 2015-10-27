@@ -35,14 +35,7 @@
 
                                     )))
 
-    #_(! $scope.depts (clj->js [
-                                 { :title "信息科"  :id 1 :persons 5 }
-                                 { :title  "骨科"  :id 2  :persons 6 }
-                                 { :title  "眼科" :id 3 :persons 3 }
-                                 { :title  "儿科"  :id 4 :persons 2  }
-                                 { :title  "口腔科" :id 5 :persons 1 }
-                                 { :title  "妇科" :id 6 :persons 4 }
-                                 ]))
+
 
     (! $scope.show_broad_chat (fn [deptname]
 

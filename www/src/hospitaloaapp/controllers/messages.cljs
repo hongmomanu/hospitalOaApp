@@ -9,7 +9,7 @@
 
 
 (defn init []
-  (def.controller starter.controllers.MessagesCtrl [$scope $rootScope]
+  (def.controller starter.controllers.MessagesCtrl [$scope $rootScope $state]
   ;;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
   (println "messages")
 
@@ -18,6 +18,24 @@
                                             ))
 
   (! $scope.messages (getmessages))
+
+  (! $scope.showchatview (fn [message]
+
+                           (println "messagemessagemessage" message)
+
+                           (if (= message.type "group")
+                             (.go $state "app.chatgroupinfo" (obj :deptId message.id :deptName  message.title) )
+                             (.go $state "app.chatsingleinfo" (obj :deptId message.id :deptName  message.title) )
+                             )
+
+
+                           )
+
+
+
+     )
+
+
 
 
 

@@ -1,5 +1,14 @@
-<ion-view view-title="Deptpersons">
+<ion-view view-title="{{deptname}}">
   <ion-content>
-    <h1>Deptpersons</h1>
+    <ion-list>
+      <ion-item class="item item-avatar-left  item-icon-right" ng-repeat="person in persons" href="#/app/chats/sigle/{{person._id}}/{{person.realname}}">
+
+          <i class="icon ion-chatbox-working" style="left: 18px;"></i>
+          <div class="deptname">{{person.realname}}</div>
+          <i class="badge badge-assertive item-note elementCenterAlign">{{message.nums}}</i>
+          <i class="icon ion-ios-arrow-right"></i>
+
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>

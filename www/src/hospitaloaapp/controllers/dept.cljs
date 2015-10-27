@@ -26,11 +26,14 @@
     (println "DeptCtrl" $stateParams)
 
 
+    (! $scope.deptname $stateParams.deptName)
+
+
 
 
     (.show $ionicLoading (obj :template "加载中.."  :duration 3000))
     (-> DeptService
-                           (.getusersbydeptid $stateParams.personId)
+                           (.getusersbydeptid $stateParams.deptId)
                            (.then (fn [response]
                                     (.hide $ionicLoading)
 

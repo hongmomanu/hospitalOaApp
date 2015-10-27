@@ -26,6 +26,13 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
+    .state('user', {
+                url: '/login',
+                templateUrl: 'templates/loginfull.html',
+                //templateUrl: localStorage.serverurl + 'templates/login.html?t=' + (new Date().getTime()),
+                controller: 'UserCtrl'
+            })
+
     .state('app', {
     url: '/app',
     abstract: true,
@@ -53,7 +60,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   })
 
    .state('app.deptperson', {
-     url: '/depts/:personId',
+     url: '/depts/:deptId/:deptName',
       views: {
         'menuContent': {
           templateUrl: 'templates/deptpersons.html',
@@ -101,5 +108,6 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/messages');
+  //$urlRouterProvider.otherwise('/app/messages');
+  $urlRouterProvider.otherwise('/login');
 });

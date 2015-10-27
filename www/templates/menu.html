@@ -14,14 +14,14 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable bar-dark">
-      <h1 class="title">菜单</h1>
+      <h1 class="title">{{user.deptname}}:{{user.realname}}</h1>
     </ion-header-bar>
     <ion-content class="blackmenu">
       <ion-list>
         <ion-item menu-close  class="item item-avatar-left  item-icon-right"  ng-click="login()">
           <i class="icon ion-log-in" style="left: 18px;"></i>
           <i class="icon ion-ios-arrow-forward"></i>
-          <div class="menuname">登录</div>
+          <div class="menuname">切换帐号</div>
         </ion-item>
         <ion-item menu-close class="item item-avatar-left  item-icon-right"     href="#/app/depts">
           <i class="icon ion-person-stalker" style="left: 18px;"></i>

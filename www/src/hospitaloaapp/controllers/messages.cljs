@@ -25,7 +25,7 @@
 
                            (if (= message.type "group")
                              (.go $state "app.chatgroupinfo" (obj :deptId message.id :deptName  message.title) )
-                             (.go $state "app.chatsingleinfo" (obj :deptId message.id :deptName  message.title) )
+                             (.go $state "app.chatsingleinfo" (obj :messageId message.id :title  message.title) )
                              )
 
 

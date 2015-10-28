@@ -10,7 +10,7 @@
             on-refresh="doRefresh()">
         </ion-refresher>
         <ol class="messages">
-          <li ng-repeat="message in messages" ng-bind-html="message.realname +message.content">
+          <li ng-repeat="message in messages" ng-bind-html="message.realname +message.content" class="{{message.local?'localmessage':'remotemessage'}}">
 
 
 

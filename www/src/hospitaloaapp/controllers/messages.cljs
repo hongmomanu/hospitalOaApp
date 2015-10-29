@@ -13,7 +13,7 @@
   ;;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
   (println "messages")
 
-    (.$on $rootScope "messageslistupdate" (fn [event] (println "messageslistupdate")
+    (.$on $scope "messageslistupdate" (fn [event] (println "messageslistupdate")
                                                       (! $scope.messages (getmessages))
                                             ))
 

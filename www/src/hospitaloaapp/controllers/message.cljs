@@ -12,10 +12,11 @@
 
   (def.service starter.MessageService [$http]
   (obj
-    :addmessage (fn [content ftype fromid toid groupid mtype]
+    :addmessage (fn [content ftype fromid toid groupid mtype toname fromname]
                 (-> $http
                   (.post (str js/serverurl "addmessage") (obj :content content :ftype ftype
                                                               :fromid fromid :toid toid
+                                                              :toname toname :fromname fromname
                                                               :groupid groupid :mtype mtype))
                   (.then (fn [response] response))
                   (.catch (fn[response] response))
@@ -27,9 +28,14 @@
 
 
 
-  (def.controller starter.controllers.MessageCtrl [$scope $ionicPopup $ionicLoading $rootScope $stateParams $compile MessageService]
+  (def.controller starter.controllers.MessageCtrl [$location $scope $timeout $ionicPopup $ionicLoading $rootScope $stateParams $compile MessageService]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
-    (println "MessageCtrl" $stateParams)
+    (println "MessageCtrl" $stateParams (> (js->clj(-> $location
+                                                       (.url)
+
+                                                       (.indexOf $stateParams.messageId)
+
+                                                       )) 0) )
 
     (! $scope.title $stateParams.title)
 
@@ -40,11 +46,44 @@
   ]
        ))
 
+    (.$on $scope "receivepmsg" (fn [event data] (println "receivepmsg" event data (= data.data.fromid data.data.toid))
+
+                                     (when-not (= data.data.fromid data.data.toid)
+                                       ($timeout (fn[]
+
+                                                   (when (> (js->clj(-> $location
+                                                       (.url)
+
+                                                       (.indexOf data.data.fromid)
+
+                                                       )) 0)(do (.push $scope.messages (obj  :content data.data.content :local false :realname
+                                                                    (str "<a>" data.data.fromname (.date js/$.format (new js/Date data.data.time ) "M-dd hh:mm") "</a>")))
+                                                              (aset js/newmessages data.data.fromid nil)
+                                                              )
+
+
+
+
+
+                                                     )
+
+
+
+
+                                                   )
+
+                                                 0
+                                                 )
+
+                                       )
+
+                                            ))
+
     (! $scope.addmessage (fn []
 
                            (.show $ionicLoading (obj :template "传输中..."  :duration 5000))
                            (-> MessageService
-                           (.addmessage (str "<p>" $scope.messagetext "</p>") "text" js/localStorage.userid $stateParams.messageId "" "person")
+                           (.addmessage (str "<p>" $scope.messagetext "</p>") "text" js/localStorage.userid $stateParams.messageId  "" "person" $stateParams.title js/localStorage.realname)
                            (.then (fn [response]
 
 

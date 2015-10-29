@@ -49,10 +49,22 @@
 
 
     (! socket.onmessage (fn [event]
-                          (println event.data)
-                          (case event.data.type
-                            "message" (println event.data.data)
+                          (let [
+                                res (.parse js/JSON event.data)
+                                ]
+
+
+                          (case res.type
+                            "message" (do (if (= res.data.mtype "person") (.$broadcast $rootScope "receivepmsg" res) (.$broadcast $rootScope "receivegmsg" res))
+
+                                        (aset js/newmessages res.data.fromid (.concat (clj->js [res])
+                                                                                                  (if (nil? (aget js/newmessages res.data.fromid)) (clj->js []) (aget js/newmessages res.data.fromid))  ))
+                                        )
                             "default")
+
+                            )
+
+
 
                           ))
 

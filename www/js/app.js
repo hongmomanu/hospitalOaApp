@@ -6,6 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 var serverurl= "http://192.168.2.100:3000/"
 var socketobj=null;
+var newmessages={};
 
 angular.module('starter', ['ionic', 'starter.controllers'])
 

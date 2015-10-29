@@ -70,9 +70,10 @@
   float:right;
 
 
+
 }
 .remotemessage p{
-  background:#158ffe;
+  background:#158FFE !important;
 	color:#fff;
 }
 

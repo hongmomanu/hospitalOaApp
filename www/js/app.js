@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 var serverurl= "http://192.168.2.100:3000/"
-var testobj=null;
+var socketobj=null;
 
 angular.module('starter', ['ionic', 'starter.controllers'])
 
@@ -38,8 +38,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     .state('app', {
     url: '/app',
     abstract: true,
-    templateUrl: 'templates/menu.html'//,
-    //controller: 'UserCtrl'
+    templateUrl: 'templates/menu.html',
+    controller: 'MenuCtrl'
   })
 
   .state('app.search', {

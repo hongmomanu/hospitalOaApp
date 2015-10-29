@@ -6,6 +6,7 @@
             [hospitaloaapp.controllers.depts :as depts]
             [hospitaloaapp.controllers.dept :as dept]
             [hospitaloaapp.controllers.user :as user]
+            [hospitaloaapp.controllers.menu :as menu]
             [hospitaloaapp.controllers.chatgroup :as chatgroup]
             )
   (:use [jayq.core :only [$ css html]]
@@ -37,8 +38,9 @@
 
 
 
-
+(menu/init)
 (user/init)
+
 (messages/init)
 (message/init)
 (depts/init)

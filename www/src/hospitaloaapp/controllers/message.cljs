@@ -59,6 +59,7 @@
                                                        )) 0)(do (.push $scope.messages (obj  :content data.data.content :local false :realname
                                                                     (str "<a>" data.data.fromname (.date js/$.format (new js/Date data.data.time ) "M-dd hh:mm") "</a>")))
                                                               (aset js/newmessages data.data.fromid nil)
+                                                              (.$broadcast $rootScope "updatedeptpersons")
                                                               )
 
 
@@ -76,6 +77,7 @@
                                                  )
 
                                        )
+
 
                                             ))
 

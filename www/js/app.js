@@ -64,6 +64,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
    .state('app.deptperson', {
      url: '/depts/:deptId/:deptName',
+      //cache: true,
       views: {
         'menuContent': {
           templateUrl: 'templates/deptpersons.html',

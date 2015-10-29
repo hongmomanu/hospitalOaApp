@@ -59,6 +59,8 @@
 
                                         (aset js/newmessages res.data.fromid (.concat (clj->js [res])
                                                                                                   (if (nil? (aget js/newmessages res.data.fromid)) (clj->js []) (aget js/newmessages res.data.fromid))  ))
+
+                                        (.$broadcast $rootScope "updatedeptpersons")
                                         )
                             "default")
 

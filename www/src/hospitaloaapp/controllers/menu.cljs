@@ -24,7 +24,7 @@
 
 
 
-(! $scope.login (fn[]
+  (! $scope.login (fn[]
 
                   (.$broadcast $rootScope "login")
 

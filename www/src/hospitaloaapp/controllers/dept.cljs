@@ -21,7 +21,7 @@
 
     ))
 
-  (def.controller starter.controllers.DeptCtrl [$scope $stateParams $state $ionicLoading DeptService $compile]
+  (def.controller starter.controllers.DeptCtrl [$scope $rootScope $timeout $stateParams $state $ionicLoading DeptService $compile]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "DeptCtrl" $stateParams)
 
@@ -36,13 +36,37 @@
                            (.getusersbydeptid $stateParams.deptId)
                            (.then (fn [response]
                                     (.hide $ionicLoading)
-
-                                    ;(println (doall (map #(conj % {:title (:deptname %) }) response.data)))
-
-                                    (println response.data)
                                      (! $scope.persons response.data)
+                                     (.$broadcast $rootScope "updatedeptpersons")
 
                                     )))
+
+    (! $scope.updatelistener (.$on $rootScope "updatedeptpersons" (fn []
+                                 (println "updatedeptpersons")
+                                 ($timeout (fn[]
+                                             (! $scope.persons
+                                                (clj->js (map #(if (nil? (do (aget js/newmessages (get % "_id")))) (conj % {:nums nil})
+                                                                 (conj % {:nums (aget (aget js/newmessages (get % "_id")) "length" )}))
+                                                              (js->clj $scope.persons))))
+
+
+                                             ) 0)
+
+
+
+
+
+                                 )))
+
+
+    (.$on $scope "$destroy" (fn []
+                              ($scope.updatelistener)
+
+                              ))
+
+
+
+
 
   )
 

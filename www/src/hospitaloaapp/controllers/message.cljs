@@ -23,12 +23,25 @@
 
                     ))
 
+   :getmessagehistory (fn [fromid toid lasttime]
+
+                 (-> $http
+                  (.post (str js/serverurl "getmessagehistory") (obj
+                                                              :fromid fromid :toid toid
+                                                              :time lasttime))
+                  (.then (fn [response] response))
+                  (.catch (fn[response] response))
+
+                    )
+
+                 )
+
 
     ))
 
 
 
-  (def.controller starter.controllers.MessageCtrl [$location $scope $timeout $ionicPopup $ionicLoading $rootScope $stateParams $compile MessageService]
+  (def.controller starter.controllers.MessageCtrl [$location  $ionicScrollDelegate $scope $timeout $ionicPopup $ionicLoading $rootScope $stateParams $compile MessageService]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "MessageCtrl" $stateParams (> (js->clj(-> $location
                                                        (.url)
@@ -62,13 +75,9 @@
                                                               (aset js/newmessages data.data.fromid nil)
                                                               (.$broadcast $rootScope "updatedeptpersons")
                                                               (.$broadcast $rootScope "updatemsgnums")
-
+                                                              (.scrollBottom $ionicScrollDelegate true)
 
                                                               )
-
-
-
-
 
                                                      )
 
@@ -93,7 +102,6 @@
          )
 
 
-
     (! $scope.addmessage (fn []
 
                            (.show $ionicLoading (obj :template "传输中..."  :duration 5000))
@@ -109,6 +117,7 @@
                                         (.push $scope.messages (obj  :content (str "<p>" $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname "</a>")))
 
                                         (! $scope.messagetext "")
+                                        (.scrollBottom $ionicScrollDelegate true)
 
                                         )
                                       (.alert $ionicPopup (obj :title "发送失败" :template "网络错误"))
@@ -132,8 +141,36 @@
     (! $scope.doRefresh (fn[]
 
                           (println "doRefresh")
-                          (.unshift $scope.messages (obj  :content (str "<p>" (rand-int 100) "</p>") :realname "<a>张燕芳</a>"))
-                          (.$broadcast $scope "scroll.refreshComplete")
+
+                          (-> MessageService
+                           (.getmessagehistory js/localStorage.userid $stateParams.messageId  (.date js/$.format (new js/Date) "yyyy-M-ddTH:mm:ssZ"))
+                           (.then (fn [response]
+
+
+                                    (.hide $ionicLoading)
+                                    (doall (map #(.unshift $scope.messages (obj  :content (aget
+                                                                                   (clj->js %)
+                                                                                   "content"
+                                                                                  ) :local false :realname
+                                                                    (str "<a>" (aget
+                                                                                   (clj->js %)
+                                                                                   "fromname"
+                                                                                  ) (.date js/$.format (new js/Date (aget
+                                                                                   (clj->js %)
+                                                                                   "time"
+                                                                                  ) ) "M-dd hh:mm") "</a>"))) (js->clj response.data)))
+
+                                    (.$broadcast $scope "scroll.refreshComplete")
+
+                                    ))
+
+
+                               )
+
+
+
+                          ;(.unshift $scope.messages (obj  :content (str "<p>" (rand-int 100) "</p>") :realname "<a>张燕芳</a>"))
+
 
                           ))
 

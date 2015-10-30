@@ -24,14 +24,11 @@
 
 
 
-  (! $scope.login (fn[]
+   (! $scope.login (fn[]
 
                   (.$broadcast $rootScope "login")
 
-                  )
-
-
-   )
+                  ))
 
     (.$on $rootScope "updatemenu" (fn [event] (println "updatemenu")
 

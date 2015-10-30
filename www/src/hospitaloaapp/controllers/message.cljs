@@ -41,20 +41,11 @@
 
 
 
-    (! $scope.messages (let [msgs (aget js/newmessages $stateParams.messageId)
 
 
-                             ]
 
-                         (println msgs)
-                         (aset js/newmessages $stateParams.messageId nil)
-                         (println msgs)
-                         msgs
+    (println "newmessagesnewmessages added" $scope.messages)
 
-
-                         ))
-
-    ()
 
     (.$on $scope "receivepmsg" (fn [event data] (println "receivepmsg" event data (= data.data.fromid data.data.toid))
 
@@ -70,6 +61,8 @@
                                                                     (str "<a>" data.data.fromname (.date js/$.format (new js/Date data.data.time ) "M-dd hh:mm") "</a>")))
                                                               (aset js/newmessages data.data.fromid nil)
                                                               (.$broadcast $rootScope "updatedeptpersons")
+                                                              (.$broadcast $rootScope "updatemsgnums")
+
 
                                                               )
 
@@ -91,6 +84,15 @@
 
 
                                             ))
+
+
+    (! $scope.messages (clj->js []))
+
+    (let [msgs (aget js/newmessages $stateParams.messageId)]
+        (doall (map #(.$broadcast $scope "receivepmsg" (clj->js %)) (js->clj msgs)))
+         )
+
+
 
     (! $scope.addmessage (fn []
 

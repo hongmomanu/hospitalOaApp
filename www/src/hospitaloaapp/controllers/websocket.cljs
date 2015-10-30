@@ -64,7 +64,7 @@
                                         (.$broadcast $rootScope "updatedeptpersons")
                                         (.$broadcast $rootScope "updatemsgnums")
 
-                                        ( messageobj/makemessage res.data.fromid (if (nil? res.data.groupid) res.data.fromname res.data.toname) $rootScope)
+                                        ( messageobj/makemessage res.data.fromid (if (or (nil? res.data.groupid) (= "" res.data.groupid) ) res.data.fromname res.data.toname) $rootScope)
 
                                         )
                             "default")

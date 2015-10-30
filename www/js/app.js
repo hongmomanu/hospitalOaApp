@@ -104,6 +104,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
   .state('app.chatsingleinfo', {
     url: '/chats/sigle/:messageId/:title',
+    //cache: true,
     views: {
       'menuContent': {
         templateUrl: 'templates/message.html',

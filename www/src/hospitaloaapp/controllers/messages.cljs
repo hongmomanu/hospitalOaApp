@@ -19,7 +19,7 @@
 
   (! $scope.messages  (getmessages) )
 
-  (.$broadcast $rootScope "updatemsgnums")
+
 
   (! $scope.showchatview (fn [message]
 
@@ -55,6 +55,8 @@
 
                                  )))
 
+    (.$broadcast $rootScope "updatemsgnums")
+
 
     (.$on $scope "$destroy" (fn []
                               ($scope.updatelistener)
@@ -71,15 +73,18 @@
   )
 
 (defn getmessages []
+  (println "-1")
 
   (let [
         message  (js->clj js/localStorage.messages)
+
         messages (if (nil? message) {} (js->clj (.parse js/JSON js/localStorage.messages)))
+
 
         messagesclj (map #(get messages %) (keys messages))
 
-         ]
 
+         ]
 
      (clj->js messagesclj)
 

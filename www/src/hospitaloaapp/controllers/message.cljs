@@ -70,7 +70,7 @@
 
                                                        (.indexOf data.data.fromid)
 
-                                                       )) 0)(do (.push $scope.messages (obj  :content data.data.content :local false :realname
+                                                       )) 0)(do (.push $scope.messages (obj :time data.data.time  :content data.data.content :local false :realname
                                                                     (str "<a>" data.data.fromname (.date js/$.format (new js/Date data.data.time ) "M-dd hh:mm") "</a>")))
                                                               (aset js/newmessages data.data.fromid nil)
                                                               (.$broadcast $rootScope "updatedeptpersons")
@@ -140,18 +140,25 @@
 
     (! $scope.doRefresh (fn[]
 
-                          (println "doRefresh")
+                          (println "doRefresh" )
 
                           (-> MessageService
-                           (.getmessagehistory js/localStorage.userid $stateParams.messageId  (.date js/$.format (new js/Date) "yyyy-M-ddTH:mm:ssZ"))
+                           (.getmessagehistory js/localStorage.userid $stateParams.messageId  (if (nil? (first $scope.messages)) (.date js/$.format (new js/Date) "yyyy-M-ddTH:mm:ssZ") (aget (first $scope.messages) "time")) )
                            (.then (fn [response]
 
 
                                     (.hide $ionicLoading)
-                                    (doall (map #(.unshift $scope.messages (obj  :content (aget
+
+                                    (doall (map #(.unshift $scope.messages (obj :time (aget
+                                                                                   (clj->js %)
+                                                                                   "time"
+                                                                                  )  :content (aget
                                                                                    (clj->js %)
                                                                                    "content"
-                                                                                  ) :local false :realname
+                                                                                  ) :local (=(aget
+                                                                                   (clj->js %)
+                                                                                   "fromid"
+                                                                                  ) js/localStorage.userid) :realname
                                                                     (str "<a>" (aget
                                                                                    (clj->js %)
                                                                                    "fromname"

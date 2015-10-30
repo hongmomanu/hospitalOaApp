@@ -23,6 +23,17 @@
 
                     ))
 
+   :addgroupmessage (fn [content ftype fromid toid groupid mtype toname fromname]
+                (-> $http
+                  (.post (str js/serverurl "addgroupmessage") (obj :content content :ftype ftype
+                                                              :fromid fromid :toid toid
+                                                              :toname toname :fromname fromname
+                                                              :groupid groupid :mtype mtype))
+                  (.then (fn [response] response))
+                  (.catch (fn[response] response))
+
+                    ))
+
    :getmessagehistory (fn [fromid toid lasttime]
 
                  (-> $http

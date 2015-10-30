@@ -10,7 +10,7 @@
 
 (defn init []
 
-  (def.controller starter.controllers.ChatGroupCtrl [$scope   $rootScope $ionicScrollDelegate $stateParams $compile]
+  (def.controller starter.controllers.ChatGroupCtrl [$scope MessageService  $rootScope $ionicScrollDelegate $stateParams $compile]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "ChatGroupCtrl" $stateParams)
 
@@ -23,26 +23,86 @@
 
     (! $scope.messagetext "")
 
+
+    (.$on $scope "receivegmsg" (fn [event data] (println "receivegmsg" event data (= data.data.fromid data.data.toid))
+
+                                     (when-not (= data.data.fromid data.data.toid)
+                                       ($timeout (fn[]
+
+                                                   (when (> (js->clj(-> $location
+                                                       (.url)
+
+                                                       (.indexOf data.data.groupid)
+
+                                                       )) 0)(do (.push $scope.messages (obj :time data.data.time  :content data.data.content :local false :realname
+                                                                    (str "<a>" data.data.fromname (.date js/$.format (new js/Date data.data.time ) "M-dd hh:mm") "</a>")))
+                                                              (aset js/newmessages data.data.fromid nil)
+                                                              ;(.$broadcast $rootScope "updatedeptpersons")
+                                                              (.$broadcast $rootScope "updatemsgnums")
+                                                              (.scrollBottom $ionicScrollDelegate true)
+
+                                                              )
+
+                                                     )
+
+
+
+
+                                                   )
+
+                                                 0
+                                                 )
+
+                                       )
+
+
+                                            ))
+
+
+
+
+
     (! $scope.addmessage (fn []
-                           (.push $scope.messages (obj  :content (str "<p>" $scope.messagetext "</p>") :realname "<a>张燕芳</a>"))
-                           (.scrollBottom $ionicScrollDelegate true)
-                           (makemessage $stateParams.deptId $stateParams.deptName $rootScope)
+
+                           (.show $ionicLoading (obj :template "传输中..."  :duration 5000))
+                           (-> MessageService
+                           (.addgroupmessage (str "<p>" $scope.messagetext "</p>") "text" js/localStorage.userid $stateParams.messageId  $stateParams.deptId "person" $stateParams.title js/localStorage.realname)
+                           (.then (fn [response]
+
+
+                                    (.hide $ionicLoading)
+
+                                    (if (js->clj response.data.success)
+                                      (do
+                                        (.push $scope.messages (obj  :content (str "<p>" $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname "</a>")))
+
+                                        (! $scope.messagetext "")
+                                        (.scrollBottom $ionicScrollDelegate true)
+
+                                        )
+                                      (.alert $ionicPopup (obj :title "发送失败" :template "网络错误"))
+
+
+                                      )
+
+
+                                    ))
+
+
+                               )
+
+
                            ) )
 
     (! $scope.messages (clj->js [
-    { :content "<p>Wow, this is really something huh?</p>" :realname "<a>董康然</a>" }
-    { :content "<p>Yea, it\"s pretty sweet</p>" :realname "<a>张燕芳</a>"}
-    { :content "<p>I think I like Ionic more than I like ice cream!</p>" :realname "<a>张燕芳</a>" }
-    { :content "<p>Gee wiz, this is something special.</p>" :realname "<a>董康然</a>" }
 
-    { :content "<p>Is this magic?</p>" :realname "<a>张燕芳</a>"}
-    { :content "<p>Am I dreaming?</p>" :realname "<a>董康然</a>"}
-
-      { :content "<p>Am I dreaming?</p>" :realname "<a>张燕芳</a>"}
-        { :content "<p>Yea, it\"s pretty sweet</p>" :realname "<a>董康然</a>"}
-      { :content "<p>I think I like Ionic more than I like ice cream!</p>" :realname "<a>张燕芳</a>"}
   ]
        ))
+
+
+    (let [msgs (aget js/newmessages $stateParams.deptId)]
+        (doall (map #(.$broadcast $scope "receivepmsg" (clj->js %)) (js->clj msgs)))
+         )
 
 
     (! $scope.doRefresh (fn[]

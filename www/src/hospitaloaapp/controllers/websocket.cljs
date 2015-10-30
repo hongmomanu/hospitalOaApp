@@ -1,5 +1,6 @@
 (ns hospitaloaapp.controllers.websocket
   (:require [clojure.browser.repl :as repl]
+            [hospitaloaapp.controllers.message :as messageobj ]
             [cljs.reader :as reader]
             )
   (:use [jayq.core :only [$ css html]]
@@ -61,6 +62,10 @@
                                                                                                   (if (nil? (aget js/newmessages res.data.fromid)) (clj->js []) (aget js/newmessages res.data.fromid))  ))
 
                                         (.$broadcast $rootScope "updatedeptpersons")
+                                        (.$broadcast $rootScope "updatemsgnums")
+
+                                        ( messageobj/makemessage res.data.fromid (if (nil? res.data.groupid) res.data.fromname res.data.toname) $rootScope)
+
                                         )
                             "default")
 

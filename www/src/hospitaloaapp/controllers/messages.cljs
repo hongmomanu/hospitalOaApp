@@ -9,7 +9,7 @@
 
 
 (defn init []
-  (def.controller starter.controllers.MessagesCtrl [$scope $rootScope $state]
+  (def.controller starter.controllers.MessagesCtrl [$scope $rootScope $state $timeout]
   ;;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
   (println "messages")
 
@@ -17,7 +17,9 @@
                                                       (! $scope.messages (getmessages))
                                             ))
 
-  (! $scope.messages (getmessages))
+  (! $scope.messages  (getmessages) )
+
+  (.$broadcast $rootScope "updatemsgnums")
 
   (! $scope.showchatview (fn [message]
 
@@ -34,6 +36,30 @@
 
 
      )
+
+
+    (! $scope.updatelistener (.$on $rootScope "updatemsgnums" (fn []
+                                 (println "updatemsgnums")
+                                 ($timeout (fn[]
+                                             (! $scope.messages
+                                                (clj->js (map #(if (nil? (do (aget js/newmessages (get % "id")))) (conj % {:nums nil})
+                                                                 (conj % {:nums (aget (aget js/newmessages (get % "id")) "length" )}))
+                                                              (js->clj $scope.messages))))
+
+
+                                             ) 0)
+
+
+
+
+
+                                 )))
+
+
+    (.$on $scope "$destroy" (fn []
+                              ($scope.updatelistener)
+
+                              ))
 
 
 

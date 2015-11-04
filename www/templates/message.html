@@ -22,9 +22,12 @@
         <button class="button button-clear button-icon ion-images button-positive" ng-click="addimage()"></button>
         <button class="button button-clear button-icon ion-mic-a button-positive" ng-click="addvoice()"></button>
         <button class="button button-clear button-icon ion-videocamera button-positive" ng-click="addvideo()"></button>
+        <button class="button button-clear button-icon ion-document-text button-positive" ng-click="addfiles()"></button>
         <label class="item-input-wrapper">
         <i   class="icon ion-ios-compose placeholder-icon"></i>
         <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="...">
+
+         <input type="file" style="display:none;" name="ufile" />
 
         <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>-->
         </label>

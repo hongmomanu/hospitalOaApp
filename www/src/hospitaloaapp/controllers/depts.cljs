@@ -37,10 +37,10 @@
 
 
 
-    (! $scope.show_broad_chat (fn [deptname]
+    (! $scope.show_broad_chat (fn [deptname deptid]
 
                                 (println "show_broad_chat" deptname)
-                                (.go $state "app.chatgroupinfo" (obj :deptId "1212" :deptName  deptname) )
+                                (.go $state "app.chatgroupinfo" (obj :deptId deptid :deptName  deptname) )
 
                                 ))
 

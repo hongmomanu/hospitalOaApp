@@ -1,6 +1,7 @@
 (ns hospitaloaapp.controllers.websocket
   (:require [clojure.browser.repl :as repl]
             [hospitaloaapp.controllers.message :as messageobj ]
+            [hospitaloaapp.controllers.chatgroup :as chatgroupobj ]
             [cljs.reader :as reader]
             )
   (:use [jayq.core :only [$ css html]]
@@ -56,15 +57,36 @@
 
 
                           (case res.type
-                            "message" (do (if (= res.data.mtype "person") (.$broadcast $rootScope "receivepmsg" res) (.$broadcast $rootScope "receivegmsg" res))
+                            "message" (do
+                                        (println res.data.mtype)
+                                        (if (= res.data.mtype "person") (.$broadcast $rootScope "receivepmsg" res) (.$broadcast $rootScope "receivegmsg" res))
 
-                                        (aset js/newmessages res.data.fromid (.concat (clj->js [res])
-                                                                                                  (if (nil? (aget js/newmessages res.data.fromid)) (clj->js []) (aget js/newmessages res.data.fromid))  ))
+
+                                        (let [
+                                              msgid (if (= res.data.mtype "person") res.data.fromid res.data.groupid)
+                                              ]
+                                          (aset js/newmessages msgid (.concat (if (nil? (aget js/newmessages msgid)) (clj->js []) (aget js/newmessages msgid))
+                                                                              (clj->js [res])
+                                                                              ))
+
+                                          )
+
+
+
+
 
                                         (.$broadcast $rootScope "updatedeptpersons")
+
                                         (.$broadcast $rootScope "updatemsgnums")
 
-                                        ( messageobj/makemessage res.data.fromid (if (or (nil? res.data.groupid) (= "" res.data.groupid) ) res.data.fromname res.data.toname) $rootScope)
+
+                                        (if (or (nil? res.data.groupid) (= "" res.data.groupid) )
+
+                                          ( messageobj/makemessage res.data.fromid res.data.fromname $rootScope)
+
+                                          ( chatgroupobj/makemessage res.data.groupid res.data.toname $rootScope) )
+
+
 
                                         )
                             "default")

@@ -47,6 +47,19 @@
 
                  )
 
+   :getgroupmessagehistory (fn [fromid groupid lasttime]
+
+                 (-> $http
+                  (.post (str js/serverurl "getgroupmessagehistory") (obj
+                                                              :fromid fromid :groupid groupid
+                                                              :time lasttime))
+                  (.then (fn [response] response))
+                  (.catch (fn[response] response))
+
+                    )
+
+                 )
+
 
     ))
 

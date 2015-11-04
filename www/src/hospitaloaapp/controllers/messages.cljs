@@ -39,7 +39,7 @@
 
 
     (! $scope.updatelistener (.$on $rootScope "updatemsgnums" (fn []
-                                 (println "updatemsgnums")
+                                 (println "updatemsgnums" js/newmessages)
                                  ($timeout (fn[]
                                              (! $scope.messages
                                                 (clj->js (map #(if (nil? (do (aget js/newmessages (get % "id")))) (conj % {:nums nil})

@@ -23,6 +23,7 @@
 
   (def.controller starter.controllers.DeptCtrl [$scope $rootScope $timeout $stateParams $state $ionicLoading DeptService $compile]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
+
     (println "DeptCtrl" $stateParams)
 
 

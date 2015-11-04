@@ -10,7 +10,7 @@
 
 (defn init []
 
-  (def.controller starter.controllers.ChatGroupCtrl [$scope MessageService  $rootScope $ionicScrollDelegate $stateParams $compile]
+  (def.controller starter.controllers.ChatGroupCtrl [$sce $scope FileUploader  $location $timeout $ionicPopup $ionicLoading MessageService  $rootScope $ionicScrollDelegate $stateParams $compile]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "ChatGroupCtrl" $stateParams)
 
@@ -18,40 +18,145 @@
 
 
 
+     (! $scope.uploader  (new FileUploader (obj :url (str js/serverurl "uploadfile"))))
+
+    (println "FileUploader" $scope.uploader)
+    (! $scope.progress 0)
+
+    (! $scope.uploader.onAfterAddingFile  (fn [fileItem] (-> fileItem
+                                                                (.upload )
+
+                                                                )))
+
+
+
+    (! $scope.uploader.onSuccessItem  (fn [fileItem response status headers]
+
+                                        (println  response)
+                                        ;;(js/JSON )
+                                        (.hide $ionicLoading)
+
+                                        (if response.success
+
+                                          (do (case (.slice response.filetype 0 5)
+                                          "video" (do  (println "video")
+                                                    ($timeout (fn []
+                                                                (! $scope.messagetext (str "<video width=\"100%\" height=\"100%\" preload=\"auto\"  controls=\"controls\" src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></video>")
+
+                                                                 )
+                                                                ( $scope.addmessage "video")
+
+                                                                ) 0 )
+
+
+
+
+                                                    )
+
+                                           "audio"  (do (println "audio")
+
+                                                      ($timeout (fn []
+                                                                (! $scope.messagetext (str "<audio width=\"100%\" height=\"100%\" preload=\"auto\"  controls=\"controls\" src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></audio>")
+
+                                                                 )
+                                                                ( $scope.addmessage "audio")
+
+                                                                ) 0 )
+                                                      )
+
+                                            "image" (do (println "image")
+
+                                                      ($timeout (fn []
+                                                                (! $scope.messagetext (str "<img width=\"100%\" height=\"100%\"  src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></img>")
+
+                                                                 )
+                                                                ( $scope.addmessage "image")
+
+                                                                ) 0 )
+
+                                                      )
+
+                                            "default"))
+
+                                          (.alert $ionicPopup (obj :title "传输失败" :template "网络错误"))
+
+                                          )
+
+
+                                        ))
+
+
+
+
+
+
+    (! $scope.uploader.onErrorItem  (fn [fileItem response status headers] (println "error"  response
+                                                                (.hide $ionicLoading)
+                                                                )))
+
+
+
+    (! $scope.uploader.onProgressItem  (fn [fileItem progress]
+
+                                          (! $scope.progress progress)
+                                          (println $scope.progress)
+                                          (.show $ionicLoading (obj :template (str "传输中..." $scope.progress "%")
+                                                                    :animation "fade-in"
+                                                                    :showBackdrop true
+
+                                                                    :showDelay 0
+                                                                    ))
+
+
+
+                                          ))
+
 
 
 
     (! $scope.messagetext "")
 
+    (! $scope.addfiles (fn [](do
+
+                              ;(.trigger (js/$ "#groupmsgfiles") "click")
+
+                              (.trigger (.element js/angular "#groupmsgfiles") "click")
+                               (println "addfiles")
+
+
+                              )))
+
 
     (.$on $scope "receivegmsg" (fn [event data] (println "receivegmsg" event data (= data.data.fromid data.data.toid))
 
                                      (when-not (= data.data.fromid data.data.toid)
-                                       ($timeout (fn[]
+
 
                                                    (when (> (js->clj(-> $location
                                                        (.url)
 
                                                        (.indexOf data.data.groupid)
 
-                                                       )) 0)(do (.push $scope.messages (obj :time data.data.time  :content data.data.content :local false :realname
+                                                       )) 0) ($timeout (fn[](do (.push $scope.messages (obj :time data.data.time  :content data.data.content :local false :realname
                                                                     (str "<a>" data.data.fromname (.date js/$.format (new js/Date data.data.time ) "M-dd hh:mm") "</a>")))
-                                                              (aset js/newmessages data.data.fromid nil)
+                                                              (println $scope.messages)
+                                                              (aset js/newmessages data.data.groupid nil)
                                                               ;(.$broadcast $rootScope "updatedeptpersons")
+                                                              (println "hahahah")
                                                               (.$broadcast $rootScope "updatemsgnums")
                                                               (.scrollBottom $ionicScrollDelegate true)
 
-                                                              )
+                                                              )) 0)
 
                                                      )
 
 
 
 
-                                                   )
 
-                                                 0
-                                                 )
 
                                        )
 
@@ -61,12 +166,21 @@
 
 
 
+    (! $scope.trustHtml (fn [htmlCode]
 
-    (! $scope.addmessage (fn []
+                         (
+            .trustAsHtml $sce htmlCode
+        )))
+
+
+
+
+
+    (! $scope.addmessage (fn [msgtype]
 
                            (.show $ionicLoading (obj :template "传输中..."  :duration 5000))
                            (-> MessageService
-                           (.addgroupmessage (str "<p>" $scope.messagetext "</p>") "text" js/localStorage.userid $stateParams.messageId  $stateParams.deptId "person" $stateParams.title js/localStorage.realname)
+                           (.addgroupmessage (str "<p>" $scope.messagetext "</p>") msgtype js/localStorage.userid $stateParams.deptId  $stateParams.deptId "group" $stateParams.deptName js/localStorage.realname)
                            (.then (fn [response]
 
 
@@ -74,9 +188,14 @@
 
                                     (if (js->clj response.data.success)
                                       (do
-                                        (.push $scope.messages (obj  :content (str "<p>" $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname "</a>")))
+                                        (.push $scope.messages (obj  :content (str "<p>"   $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname (.date js/$.format (new js/Date) "M-dd hh:mm") "</a>")))
+
+                                        (println $scope.messages)
 
                                         (! $scope.messagetext "")
+
+                                        (makemessage $stateParams.deptId $stateParams.deptName $rootScope)
+
                                         (.scrollBottom $ionicScrollDelegate true)
 
                                         )
@@ -101,15 +220,44 @@
 
 
     (let [msgs (aget js/newmessages $stateParams.deptId)]
-        (doall (map #(.$broadcast $scope "receivepmsg" (clj->js %)) (js->clj msgs)))
+        (doall (map #(.$broadcast $scope "receivegmsg" (clj->js %)) (js->clj msgs)))
          )
 
 
     (! $scope.doRefresh (fn[]
 
                           (println "doRefresh")
-                          (.unshift $scope.messages (obj  :content (str "<p>" (rand-int 100) "</p>") :realname "<a>张燕芳</a>"))
-                          (.$broadcast $scope "scroll.refreshComplete")
+                          (-> MessageService
+                           (.getgroupmessagehistory js/localStorage.userid $stateParams.deptId  (if (nil? (first $scope.messages)) (.date js/$.format (new js/Date) "yyyy-M-ddTH:mm:ssZ") (aget (first $scope.messages) "time")) )
+                           (.then (fn [response]
+
+
+                                    (.hide $ionicLoading)
+
+                                    (doall (map #(.unshift $scope.messages (obj :time (aget
+                                                                                   (clj->js %)
+                                                                                   "time"
+                                                                                  )  :content (aget
+                                                                                   (clj->js %)
+                                                                                   "content"
+                                                                                  ) :local (=(aget
+                                                                                   (clj->js %)
+                                                                                   "fromid"
+                                                                                  ) js/localStorage.userid) :realname
+                                                                    (str "<a>" (aget
+                                                                                   (clj->js %)
+                                                                                   "fromname"
+                                                                                  ) (.date js/$.format (new js/Date (aget
+                                                                                   (clj->js %)
+                                                                                   "time"
+                                                                                  ) ) "M-dd hh:mm") "</a>"))) (js->clj response.data)))
+
+                                    (.$broadcast $scope "scroll.refreshComplete")
+
+                                    ))
+
+
+                               )
 
                           ))
 
@@ -123,7 +271,7 @@
 (defn makemessage [deptId deptName $rootScope]
 
 
-
+  (println "newmessages group group group" deptId deptName)
   (let [
 
         message  (js->clj js/localStorage.messages)

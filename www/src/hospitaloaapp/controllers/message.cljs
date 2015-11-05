@@ -65,7 +65,7 @@
 
 
 
-  (def.controller starter.controllers.MessageCtrl [$location  $ionicScrollDelegate $scope $timeout $ionicPopup $ionicLoading $rootScope $stateParams $compile MessageService]
+  (def.controller starter.controllers.MessageCtrl [$sce $ionicActionSheet FileUploader $location  $ionicScrollDelegate $scope $timeout $ionicPopup $ionicLoading $rootScope $stateParams $compile MessageService]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "MessageCtrl" $stateParams (> (js->clj(-> $location
                                                        (.url)
@@ -75,6 +75,311 @@
                                                        )) 0) )
 
     (! $scope.title $stateParams.title)
+
+    (! $scope.trustHtml (fn [htmlCode]
+
+                         (
+            .trustAsHtml $sce htmlCode
+        )))
+
+    (! $scope.addimage (fn []
+                         (.show $ionicActionSheet (obj :buttons [
+                {:text  "<b>拍照</b>" }
+                {:text  "<b>从图片库</b>" }
+            ]
+            :titleText "选择图片"
+            :cancelOnStateChange false
+            :cancelText "取消"
+            :cancel (fn [] (println "cancel"))
+            :buttonClicked (fn[ index] (println index) )
+
+
+                         ))))
+
+    (! $scope.uploader  (new FileUploader (obj :url (str js/serverurl "uploadfile"))))
+
+
+
+
+    (println "FileUploader" $scope.uploader)
+    (! $scope.progress 0)
+
+    (! $scope.uploader.onAfterAddingFile  (fn [fileItem] (-> fileItem
+                                                                (.upload )
+
+                                                                )))
+
+
+
+    (! $scope.uploader.onSuccessItem  (fn [fileItem response status headers]
+
+                                        (println  response)
+                                        ;;(js/JSON )
+                                        (.hide $ionicLoading)
+
+                                        (if response.success
+
+                                          (do (case (.slice response.filetype 0 5)
+                                          "video" (do  (println "video")
+                                                    ($timeout (fn []
+                                                                (! $scope.messagetext (str "<video width=\"100%\" height=\"100%\" preload=\"auto\"  controls=\"controls\" src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></video>")
+
+                                                                 )
+                                                                ( $scope.addmessage "video")
+
+                                                                ) 0 )
+
+
+
+
+                                                    )
+
+                                           "audio"  (do (println "audio")
+
+                                                      ($timeout (fn []
+                                                                (! $scope.messagetext (str "<audio width=\"100%\" height=\"100%\" preload=\"auto\"  controls=\"controls\" src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></audio>")
+
+                                                                 )
+                                                                ( $scope.addmessage "audio")
+
+                                                                ) 0 )
+                                                      )
+
+                                            "image" (do (println "image")
+
+                                                      ($timeout (fn []
+                                                                (! $scope.messagetext (str "<img width=\"100%\" height=\"100%\"  src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></img>")
+
+                                                                 )
+                                                                ( $scope.addmessage "image")
+
+                                                                ) 0 )
+
+                                                      )
+
+                                            (do (println "otherfiles")
+
+                                                      ($timeout (fn []
+                                                                (! $scope.messagetext (str "<a   href=\"" js/serverurl "files/"
+                                                                               response.filename "\">" response.name  "</a>")
+
+                                                                 )
+                                                                ( $scope.addmessage "otherfiles")
+
+                                                                ) 0 )
+
+                                                      )))
+
+                                          (.alert $ionicPopup (obj :title "传输失败" :template "网络错误"))
+
+                                          )
+
+
+                                        ))
+
+
+
+
+
+
+    (! $scope.uploader.onErrorItem  (fn [fileItem response status headers] (println "error"  response
+                                                                (.hide $ionicLoading)
+                                                                )))
+
+
+
+    (! $scope.uploader.onProgressItem  (fn [fileItem progress]
+
+                                          (! $scope.progress progress)
+                                          (println $scope.progress)
+                                          (.show $ionicLoading (obj :template (str "传输中..." $scope.progress "%")
+                                                                    :animation "fade-in"
+                                                                    :showBackdrop true
+
+                                                                    :showDelay 0
+                                                                    ))
+
+
+
+                                          ))
+
+
+    (! $scope.addfiles (fn [](do
+
+                              ;(.trigger (js/$ "#groupmsgfiles") "click")
+
+                              (.trigger (.element js/angular "#personmsgfiles") "click")
+                               (println "addfiles")
+
+
+                              )))
+
+    (! $scope.captureUserMedia (fn [mediaConstraints successCallback errorCallback]
+
+
+
+                                 (->
+                                   js/navigator.mediaDevices
+                                  (.getUserMedia mediaConstraints)
+                                  (.then successCallback)
+                                  (.catch errorCallback)
+            )))
+
+    (! $scope.mediasream nil)
+    (! $scope.recordRTC nil)
+
+     (! $scope.startrecordvoice (fn [](do
+
+
+                              (println "startrecording")
+
+
+
+                               (let [
+                                     commonConfig (obj :onMediaCaptured (fn [stream]
+
+                                                                          (println "onMediaCaptured")
+                                                                          (! $scope.mediasream stream)
+                                                                          (println stream $scope.mediasream)
+                                                                          (! $scope.recordRTC (js/RecordRTC $scope.mediasream (obj :recorderType js/StereoAudioRecorder
+                                                                                                                                   :type "audio"
+                                                                                                                                   )))
+                                                                          (.startRecording $scope.recordRTC )
+
+                                                                          )
+                                                       :onMediaStopped (fn[](println "onMediaStopped"))
+
+                                                       :onMediaCapturingFailed (fn[error](println "onMediaCapturingFailed"))
+                                                       )
+
+                                     ]
+
+
+
+                                 ( $scope.captureUserMedia (obj :audio true) (fn [audioStream]
+
+                                                                                ;(println "audioStream" audioStream)
+                                                                                ;(! $scope.mediasream audioStream)
+
+                                                                               (commonConfig.onMediaCaptured audioStream)
+
+                                                                                ;(! $scope.recordRTC (js/RecordRTC $scope.mediasream))
+
+                                                                                ;(.startRecording $scope.recordRTC )
+
+
+                                                                                )  (fn [error](println "error" error)
+                                                                                     ;;(js/alert error)
+
+                                                                                     ))
+
+
+
+
+                                 )
+
+                                (.show $ionicLoading (obj :template "正在录音,松开完成") )
+
+
+
+
+
+
+
+
+
+                              )))
+
+
+    (! $scope.stoprecordvoice (fn [](do
+
+                               (.hide $ionicLoading)
+                              (println "stoprecordvoice")
+                              (.stopRecording $scope.recordRTC (fn [url]
+                                                                 (println url)
+
+                                                                 (let [blob $scope.recordRTC.blob
+                                                                        fileType "audio"
+                                                                        fileName "recording.wav"
+                                                                        formData  (new js/FormData)
+
+                                                                       ]
+                                                                   (println  "blob" blob)
+                                                                   (.append formData "filename" fileName)
+                                                                   (.append formData "file" blob)
+                                                                   (println  "hahahaha")
+
+
+                                                                   ($scope.makeXMLHttpRequest (str js/serverurl "uploadfile") formData
+                                                                                              (fn[type msg](
+                                                                                                            if (= type 0)
+                                                                                                            (.alert $ionicPopup (obj :title "发送失败" :template msg))
+                                                                                                            (let [
+                                                                                                                  response (.parse js/JSON msg)
+                                                                                                                  ]
+
+                                                                                                              (! $scope.messagetext (str "<audio width=\"100%\" height=\"100%\" preload=\"auto\"  controls=\"controls\" src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></audio>"))
+                                                                                                              ( $scope.addmessage "audio")
+                                                                                                              )
+
+
+                                                                                                            )))
+
+                                                                   )
+                                                                 (.stop $scope.mediasream stop)
+
+                                                                 ))
+
+
+                              )))
+
+
+    (! $scope.makeXMLHttpRequest (fn [url data callback] (let
+
+                [request (new js/XMLHttpRequest)]
+
+                (! request.onreadystatechange (fn[]
+
+                                                (when (and (= request.readyState 4) (= request.status 200))
+
+                                                  (callback 1  request.responseText)
+                                                  )
+                                                ))
+
+                (! request.upload.onloadstart (fn[]
+
+                                                  ;;(callback "Upload started...")
+
+                                                ))
+
+                (! request.upload.onprogress (fn[event]
+
+                                                  ;;(callback (str "Upload Progress..." (.round js/Math (* (/ event.loaded  event.total)  100) )))
+
+                                                ))
+
+
+
+
+                 (! request.upload.onerror (fn[event]
+
+                                                  (callback 0 "上传服务失败")
+
+                                                ))
+
+
+
+                (.open request "POST" url)
+
+
+                (.send request data)
+            )))
+
+
 
 
 
@@ -87,31 +392,29 @@
     (.$on $scope "receivepmsg" (fn [event data] (println "receivepmsg" event data (= data.data.fromid data.data.toid))
 
                                      (when-not (= data.data.fromid data.data.toid)
-                                       ($timeout (fn[]
+
 
                                                    (when (> (js->clj(-> $location
                                                        (.url)
 
                                                        (.indexOf data.data.fromid)
 
-                                                       )) 0)(do (.push $scope.messages (obj :time data.data.time  :content data.data.content :local false :realname
+                                                       )) 0) ($timeout (fn[](do (.push $scope.messages (obj :time data.data.time  :content data.data.content :local false :realname
                                                                     (str "<a>" data.data.fromname (.date js/$.format (new js/Date data.data.time ) "M-dd hh:mm") "</a>")))
-                                                              (aset js/newmessages data.data.fromid nil)
+                                                              (println "$scope.messages " $scope.messages )
+                                                                              (aset js/newmessages data.data.fromid nil)
                                                               (.$broadcast $rootScope "updatedeptpersons")
                                                               (.$broadcast $rootScope "updatemsgnums")
                                                               (.scrollBottom $ionicScrollDelegate true)
 
-                                                              )
+                                                              ) )0)
 
                                                      )
 
 
 
 
-                                                   )
 
-                                                 0
-                                                 )
 
                                        )
 
@@ -126,11 +429,11 @@
          )
 
 
-    (! $scope.addmessage (fn []
+    (! $scope.addmessage (fn [type]
 
                            (.show $ionicLoading (obj :template "传输中..."  :duration 5000))
                            (-> MessageService
-                           (.addmessage (str "<p>" $scope.messagetext "</p>") "text" js/localStorage.userid $stateParams.messageId  "" "person" $stateParams.title js/localStorage.realname)
+                           (.addmessage (str "<p>" $scope.messagetext "</p>") type js/localStorage.userid $stateParams.messageId  "" "person" $stateParams.title js/localStorage.realname)
                            (.then (fn [response]
 
 
@@ -138,7 +441,7 @@
 
                                     (if (js->clj response.data.success)
                                       (do
-                                        (.push $scope.messages (obj  :content (str "<p>" $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname "</a>")))
+                                        (.push $scope.messages (obj :time response.data.data.time  :content (str "<p>" $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname (.date js/$.format (new js/Date response.data.data.time ) "M-dd hh:mm")  "</a>")))
 
                                         (! $scope.messagetext "")
                                         (.scrollBottom $ionicScrollDelegate true)

@@ -7,6 +7,10 @@
 var serverurl= "http://192.168.2.100:3000/"
 var socketobj=null;
 var newmessages={};
+ var audio_context;
+var recorder;
+
+
 
 angular.module('starter', ['ionic','angularFileUpload', 'starter.controllers'])
 
@@ -14,6 +18,8 @@ angular.module('starter', ['ionic','angularFileUpload', 'starter.controllers'])
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
+
+
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);

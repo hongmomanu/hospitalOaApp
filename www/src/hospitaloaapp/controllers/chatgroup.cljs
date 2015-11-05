@@ -79,7 +79,18 @@
 
                                                       )
 
-                                            "default"))
+                                            (do (println "otherfiles")
+
+                                                      ($timeout (fn []
+                                                                (! $scope.messagetext (str "<a   href=\"" js/serverurl "files/"
+                                                                               response.filename "\">" response.name  "</a>")
+
+                                                                 )
+                                                                ( $scope.addmessage "otherfiles")
+
+                                                                ) 0 )
+
+                                                      ) ))
 
                                           (.alert $ionicPopup (obj :title "传输失败" :template "网络错误"))
 

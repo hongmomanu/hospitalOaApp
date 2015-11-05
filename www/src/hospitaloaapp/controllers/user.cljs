@@ -20,6 +20,11 @@
                   (.get (str js/serverurl "login") (obj :params {:username  username :password password}  ) )
                   (.then (fn [response] response))))
 
+   :fireunreadmsgs (fn [userid deptid]
+                (-> $http
+                  (.get (str js/serverurl "getunreadmessages") (obj :params {:userid  userid :deptid deptid}  ) )
+                  (.then (fn [response] response))))
+
 
     ))
 
@@ -44,6 +49,7 @@
                                         (! js/localStorage.password response.data.user.password)
                                         (! js/localStorage.realname response.data.user.realname)
                                         (! js/localStorage.userid response.data.user._id)
+                                        (! js/localStorage.deptid response.data.user.deptid)
                                         (! js/localStorage.deptname response.data.user.deptname)
 
 
@@ -104,6 +110,17 @@
 
     (.$on $rootScope "login" (fn [event] (println "login")
                                                       (.login $scope)
+                                            ))
+
+
+    (.$on $rootScope "getunreadmsgs" (fn [event]
+
+                                       (-> UserService
+                           (.fireunreadmsgs js/localStorage.userid js/localStorage.deptid)
+                           (.then (fn [response]
+                                    (println response)
+
+                                    )))
                                             ))
 
 

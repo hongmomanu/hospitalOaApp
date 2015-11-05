@@ -110,6 +110,8 @@
                        (.send socket (js/JSON.stringify
                                        (clj->js {:userid js/localStorage.userid})))
 
+                       (.$broadcast $rootScope "getunreadmsgs")
+
                         ))
 
 

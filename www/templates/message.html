@@ -10,9 +10,7 @@
             on-refresh="doRefresh()">
         </ion-refresher>
         <ol class="messages">
-          <li ng-repeat="message in messages" ng-bind-html="message.realname +message.content" class="{{message.local?'localmessage':'remotemessage'}}">
-
-
+            <li ng-repeat="message in messages" ng-bind-html="trustHtml(message.realname +message.content)" class="{{message.local?'localmessage':'remotemessage'}}">
 
             </li>
         </ol>
@@ -20,18 +18,19 @@
 
     <ion-footer-bar class="bar-frosted">
         <button class="button button-clear button-icon ion-images button-positive" ng-click="addimage()"></button>
-        <button class="button button-clear button-icon ion-mic-a button-positive" ng-click="addvoice()"></button>
+        <button class="button button-clear button-icon ion-mic-a button-positive" on-touch="startrecordvoice()" on-release="stoprecordvoice()" ></button>
         <button class="button button-clear button-icon ion-videocamera button-positive" ng-click="addvideo()"></button>
         <button class="button button-clear button-icon ion-document-text button-positive" ng-click="addfiles()"></button>
         <label class="item-input-wrapper">
         <i   class="icon ion-ios-compose placeholder-icon"></i>
         <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="...">
 
-         <input type="file" style="display:none;" name="ufile" />
+
+            <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="personmsgfiles"  />
 
         <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>-->
         </label>
-        <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addmessage()">发送</button>
+        <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addmessage('text')">发送</button>
     </ion-footer-bar>
 
 </ion-view>

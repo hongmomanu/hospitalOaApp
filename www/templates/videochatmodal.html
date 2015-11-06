@@ -1,0 +1,14 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-stable bar-dark">
+    <h1 class="title">视频聊天</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closevideomodel()">关闭</button>
+    </div>
+  </ion-header-bar>
+
+
+    <div class="scroll-content has-header  light">
+        <iframe name="chatframe" id="chatframe" style="height:100%" width="100%" ng-src="{{videochaturl}}" ></iframe>
+    </div>
+
+</ion-modal-view>

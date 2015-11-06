@@ -5,8 +5,10 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 var serverurl= "http://192.168.2.100:3000/"
+var videorurl="http://111.1.76.108:4450/";//Globle_Variable.serverurl.replace(/(:\d+)/g,":4450");
 var socketobj=null;
 var newmessages={};
+var isvideochating=false;
  var audio_context;
 var recorder;
 

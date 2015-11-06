@@ -89,6 +89,25 @@
 
 
                                         )
+
+                            "firechatvideo" (do (println res.data)
+
+                                              (.$broadcast $rootScope "firechatvideo" res)
+
+                                              )
+
+                            "firechatarrived" (do (println res.data)
+
+                                              (.$broadcast $rootScope "firechatarrived" res)
+
+                                              )
+
+                            "firechatend" (do (println res.data)
+
+                                              (.$broadcast $rootScope "firechatend" res)
+
+                                              )
+
                             "default")
 
                             )

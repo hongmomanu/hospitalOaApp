@@ -59,13 +59,48 @@
                     )
 
                  )
+   :firechatvideo (fn [fromid toid ]
+
+                 (-> $http
+                  (.post (str js/serverurl "firechatvideo") (obj
+                                                              :fromid fromid :toid toid))
+                  (.then (fn [response] response))
+                  (.catch (fn[response] response))
+
+                    )
+
+                 )
+
+   :firechatarrived (fn [fromid toid ischating]
+
+                 (-> $http
+                  (.post (str js/serverurl "firechatarrived") (obj
+                                                              :fromid fromid :toid toid :ischating ischating))
+                  (.then (fn [response] response))
+                  (.catch (fn[response] response))
+
+                    )
+
+                 )
+
+   :firechatend (fn [fromid toid]
+
+                 (-> $http
+                  (.post (str js/serverurl "firechatend") (obj
+                                                              :fromid fromid :toid toid ))
+                  (.then (fn [response] response))
+                  (.catch (fn[response] response))
+
+                    )
+
+                 )
 
 
     ))
 
 
 
-  (def.controller starter.controllers.MessageCtrl [$sce $ionicActionSheet FileUploader $location  $ionicScrollDelegate $scope $timeout $ionicPopup $ionicLoading $rootScope $stateParams $compile MessageService]
+  (def.controller starter.controllers.MessageCtrl [$sce $ionicModal $ionicActionSheet FileUploader $location  $ionicScrollDelegate $scope $timeout $ionicPopup $ionicLoading $rootScope $stateParams $compile MessageService]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "MessageCtrl" $stateParams (> (js->clj(-> $location
                                                        (.url)
@@ -74,13 +109,89 @@
 
                                                        )) 0) )
 
+
+
+
     (! $scope.title $stateParams.title)
+
+    (.$on $rootScope "firechatend" (fn [event] (println "firechatend")
+
+                                    (.remove $scope.videochatmodal)
+                                    (set! js/isvideochating false)
+                                    (! $scope.videochatmodal nil)
+
+                                    ))
 
     (! $scope.trustHtml (fn [htmlCode]
 
                          (
             .trustAsHtml $sce htmlCode
         )))
+
+    (! $scope.closevideomodel (fn[]
+
+                                 (->
+                                  $ionicPopup
+                                  (.confirm (obj :title "温馨提示"
+                                                           :template "你确定要退出此次通话么?"))
+                                  (.then (fn [res]
+                                           (if res (do
+
+                                                     (.remove $scope.videochatmodal)
+                                                     (set! js/isvideochating false)
+                                                     (! $scope.videochatmodal nil)
+
+                                                     (-> MessageService
+                           (.firechatend js/localStorage.userid $stateParams.messageId)
+                           (.then (fn [response]))
+
+
+                               )
+
+
+                                                     )
+
+
+                                             (println "cancel")
+                                             )
+
+
+                                           ))
+                                  )
+
+                                ))
+
+
+
+    (! $scope.addvideo (fn[]
+                         (! $scope.videochaturl (.trustAsResourceUrl $sce (str js/videorurl "?handle=" js/localStorage.userid "&touser=" $stateParams.messageId )))
+
+                         (if (nil? $scope.videochatmodal) (-> (.fromTemplateUrl  $ionicModal "templates/videochatmodal.html" (obj :scope $scope
+                                                                       )) (.then  (fn [modal] (
+                                                                                                 ! $scope.videochatmodal modal
+                                                                                                 )
+                                                                                     (.show $scope.videochatmodal)
+
+                                                                                     )))
+
+                           (.show $scope.videochatmodal)
+
+                           )
+
+                         (set! js/isvideochating true)
+
+                         (-> MessageService
+                           (.firechatvideo js/localStorage.userid $stateParams.messageId)
+                           (.then (fn [response]))
+
+
+                               )
+
+
+
+
+
+                         ))
 
     (! $scope.addimage (fn []
                          (.show $ionicActionSheet (obj :buttons [
@@ -91,10 +202,48 @@
             :cancelOnStateChange false
             :cancelText "取消"
             :cancel (fn [] (println "cancel"))
-            :buttonClicked (fn[ index] (println index) )
+            :buttonClicked (fn[index] (if (= index 0) ($scope.pictureView js/Camera.PictureSourceType.CAMERA)
+                                         ($scope.pictureView js/Camera.PictureSourceType.PHOTOLIBRARY) )
+                                true
 
 
-                         ))))
+                         )))))
+
+
+    (! $scope.pictureView (fn [sourcetype]
+
+                            (.getPicture js/navigator.camera
+                                         (fn [fileurl]
+                                           (let [
+                                                 options (new js/FileUploadOptions)
+                                                 ft (new js/FileTransfer)
+                                                 ]
+                                             (! options.fileKey "file")
+                                             (! options.fileName (.substr fileurl (+ (.lastIndexOf fileurl "/") 1)))
+                                             (.upload ft fileurl (js/encodeURI (str js/serverurl "uploadfile"))
+                                                      (fn[suc](let [response (.parse js/JSON suc.response)]
+                                                            (if response.success (do
+                                                                                   (! $scope.messagetext (str "<img width=\"100%\" height=\"100%\"  src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></img>"))
+                                                                                  ( $scope.addmessage "image")
+
+
+                                                                                   ) (.alert $ionicPopup (obj :title "传输失败" :template "网络错误")))
+
+                                                                )) (fn[err](.alert $ionicPopup (obj :title "传输失败" :template "网络错误"))) options )
+                                             )
+
+
+
+                                                               ) (fn [message] (.alert $ionicPopup (obj :title "获取图片失败" :template message))
+                                                                               ) (obj :destinationType js/Camera.DestinationType.FILE_URI
+                                                                                   :sourceType sourcetype
+                                                                                   ))
+
+
+
+
+                            ))
 
     (! $scope.uploader  (new FileUploader (obj :url (str js/serverurl "uploadfile"))))
 

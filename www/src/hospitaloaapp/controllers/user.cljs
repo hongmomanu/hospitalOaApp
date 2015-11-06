@@ -1,6 +1,7 @@
 (ns hospitaloaapp.controllers.user
   (:require [clojure.browser.repl :as repl]
             [hospitaloaapp.controllers.websocket :as websocket]
+
             )
   (:use [jayq.core :only [$ css html]]
         )
@@ -29,7 +30,7 @@
     ))
 
 
-  (def.controller starter.controllers.UserCtrl [$scope  $rootScope $state $stateParams $ionicModal $ionicPopup $timeout UserService  $ionicLoading $compile]
+  (def.controller starter.controllers.UserCtrl [$scope $sce MessageService  $rootScope $state $stateParams $ionicModal $ionicPopup $timeout UserService  $ionicLoading $compile]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "UserCtrl")
 
@@ -93,6 +94,15 @@
 
 
 
+    (! $scope.videochaturl "http://www.baidu.com")
+
+
+
+
+
+
+
+
 
   (! $scope.closeLogin (fn [] ( .hide $scope.modal
                                 )))
@@ -118,9 +128,24 @@
                                        (-> UserService
                            (.fireunreadmsgs js/localStorage.userid js/localStorage.deptid)
                            (.then (fn [response]
-                                    (println response)
+                                    (println "getunreadmsgs")
 
                                     )))
+                                            ))
+
+
+
+
+
+
+    (.$on $rootScope "firechatarrived" (fn [event res]
+                                       (if res.data.ischating
+                                         (.alert $ionicPopup (obj :title "连接提示" :template "对方忙"))
+                                         (.makeconnect js/chatframe.autoconnect res.data.toid)
+                                         )
+
+
+
                                             ))
 
 

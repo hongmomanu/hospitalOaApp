@@ -40,9 +40,19 @@
 
     (.$on $rootScope "firechatend" (fn [event] (println "firechatend")
 
-                                    (.remove $scope.videochatmodal)
-                                    (set! js/isvideochating false)
-                                    (! $scope.videochatmodal nil)
+                                     (when-not (nil? $scope.videochatmodal)
+
+                                       (do
+
+                                         (.remove $scope.videochatmodal)
+                                         (set! js/isvideochating false)
+                                          (! $scope.videochatmodal nil)
+
+                                         )
+
+                                       )
+
+
 
                                     ))
 
@@ -58,7 +68,7 @@
                                            (if res (do
 
                                                      (-> MessageService
-                           (.firechatend js/localStorage.userid $scope.videochatmodal.fromid)
+                           (.firechatend js/localStorage.userid $scope.chatfromid)
                            (.then (fn [response]))
 
 
@@ -111,7 +121,7 @@
                                              (.show $scope.videochatmodal)
 
                                              )
-                                  (! $scope.videochatmodal.fromid res.data.fromid)
+                                  (! $scope.chatfromid res.data.fromid)
 
 
                                           (set! js/isvideochating true)

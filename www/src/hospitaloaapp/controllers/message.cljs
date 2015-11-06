@@ -116,9 +116,19 @@
 
     (.$on $rootScope "firechatend" (fn [event] (println "firechatend")
 
-                                    (.remove $scope.videochatmodal)
-                                    (set! js/isvideochating false)
-                                    (! $scope.videochatmodal nil)
+                                     (when-not (nil? $scope.videochatmodal)
+
+                                       (do
+
+                                         (.remove $scope.videochatmodal)
+                                         (set! js/isvideochating false)
+                                          (! $scope.videochatmodal nil)
+
+                                         )
+
+                                       )
+
+
 
                                     ))
 

@@ -5,6 +5,7 @@
             [hospitaloaapp.controllers.message :as message ]
             [hospitaloaapp.controllers.depts :as depts]
             [hospitaloaapp.controllers.dept :as dept]
+            [hospitaloaapp.controllers.registration :as registration]
             [hospitaloaapp.controllers.user :as user]
             [hospitaloaapp.controllers.menu :as menu]
             [hospitaloaapp.controllers.chatgroup :as chatgroup]
@@ -44,6 +45,7 @@
 (messages/init)
 (message/init)
 (depts/init)
+(registration/init)
 (dept/init)
 (chatgroup/init)
 (println "Hello world initssssssss  sssssss!")

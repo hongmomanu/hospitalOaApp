@@ -1,0 +1,80 @@
+<ion-view view-title="签到">
+
+
+    <ion-nav-title >
+
+
+        <h1 class="title myTitle">签到</h1>
+
+
+
+
+
+
+
+    </ion-nav-title>
+
+
+    <ion-nav-buttons side="right">
+
+        <button menu-toggle="right" class="button button-icon icon ion-plus"
+                ng-click="newRegistration()"
+                side="right" >
+            新增
+        </button>
+
+
+        <button menu-toggle="right" class="button button-icon icon ion-qr-scanner"
+                ng-click="scanRegistration()"
+                side="right" >
+            扫描
+        </button>
+      </ion-nav-buttons>
+
+
+
+
+<ion-tabs class="tabs-icon-top tabs-positive">
+    <ion-tab title="参与的签到" icon="ion-home" >
+      <ion-view view-title="参与的签到">
+        <ion-content>
+          <ion-refresher
+            pulling-text="下拉刷新..."
+            on-refresh="doRefreshIamin()">
+           </ion-refresher>
+    <ion-list>
+      <ion-item    class="item item-avatar-left  item-icon-right" ng-repeat="iamitem in iamitems" href="#/app/iamitems/{{iamitem._id}}/{{iamitem.title}}">
+
+        <i class="icon ion-android-contacts" style="left: 18px;"></i>
+          <div class="deptname">{{iamitem.title}}</div>
+          <i class="badge badge-positive  item-note elementCenterAlign">{{iamitem.time | date:'yyyy-MM-dd HH:mm:ss'}}</i>
+          <i class="badge badge-assertive  item-note elementCenterAlign">{{iamitem.checkids.length}}</i>
+          <i class="icon ion-ios-arrow-right"></i>
+
+      </ion-item>
+    </ion-list>
+        </ion-content>
+      </ion-view>
+    </ion-tab>
+    <ion-tab title="发起的签到" icon="ion-ios-information">
+      <ion-view view-title="发起的签到">
+        <ion-content>
+          <ion-refresher
+            pulling-text="下拉刷新..."
+            on-refresh="doRefreshImake()">
+           </ion-refresher>
+    <ion-list>
+      <ion-item    class="item item-avatar-left  item-icon-right" ng-repeat="imakeitem in imakeitems" href="#/app/imakeitems/{{imakeitem._id}}/{{imakeitem.title}}">
+            <i class="icon ion-android-contacts" style="left: 18px;"></i>
+          <div class="deptname">{{imakeitem.title}}</div>
+          <i class="badge badge-positive  item-note elementCenterAlign">{{imakeitem.time | date:'yyyy-MM-dd HH:mm:ss'}}</i>
+          <i class="badge badge-assertive  item-note elementCenterAlign">{{imakeitem.checkids.length}}</i>
+          <i class="icon ion-ios-arrow-right"></i>
+
+      </ion-item>
+    </ion-list>
+        </ion-content>
+      </ion-view>
+    </ion-tab>
+  </ion-tabs>
+</ion-view>

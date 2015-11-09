@@ -14,10 +14,26 @@
 (defn init []
 
 
+  (def.service starter.MenuService [$http]
+  (obj
+    :sendalarm (fn [userid realname deptname]
+                (-> $http
+                  (.get (str js/serverurl "sendalarm") (obj :params
+                                                            {:userid  userid :realname realname :deptname deptname}
+
+                                                            ) )
+                  (.then (fn [response] response))))
 
 
 
-  (def.controller starter.controllers.MenuCtrl [$scope $sce MessageService $rootScope $state $stateParams $ionicModal $ionicPopup $timeout UserService  $ionicLoading $compile]
+
+    ))
+
+
+
+
+
+  (def.controller starter.controllers.MenuCtrl [$scope $sce MenuService MessageService $rootScope $state $stateParams $ionicModal $ionicPopup $timeout UserService  $ionicLoading $compile]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "MenuCtrl")
 
@@ -38,7 +54,12 @@
                                     ))
 
 
-    (.$on $rootScope "firealarm" (fn [event] (println "firealarm")
+    (.$on $rootScope "firealarm" (fn [event data] (println "firealarm")
+
+
+                                   ;;(.show js/cordova.backgroundapp)
+
+                                   (! $scope.alarmuser data.data)
 
                                    (-> (.fromTemplateUrl  $ionicModal "templates/alarmmodal.html" (obj
                                                                                          :scope $scope
@@ -71,6 +92,25 @@
 
 
                                     ))
+
+
+
+    (! $scope.sendalarm (fn[]
+
+
+                          (-> MenuService
+                           (.sendalarm js/localStorage.userid  js/localStorage.realname js/localStorage.deptname)
+                           (.then (fn [response]
+
+
+                                      (.alert $ionicPopup (obj :title "报警提示" :template response.data.message))
+
+
+                                    )))
+
+
+
+                          ))
 
 
      (! $scope.closevideomodel (fn[]
@@ -112,12 +152,12 @@
                                 ))
 
 
-    (! $scope.closealarmmodel (fn[]
+    (! $scope.closealarmmodal (fn[]
 
 
-                                (.remove $scope.alarmmodel)
+                                (.remove $scope.alarmmodal)
 
-                                (! $scope.alarmmodel nil)
+                                (! $scope.alarmmodal nil)
 
                                   )
 

@@ -120,11 +120,12 @@ angular.module('starter', ['ionic','angularFileUpload', 'starter.controllers'])
       }
     })
 
-  .state('app.browse', {
-      url: '/browse',
+  .state('app.registration', {
+      url: '/registration',
       views: {
         'menuContent': {
-          templateUrl: 'templates/browse.html'
+          templateUrl: 'templates/registration.html',
+          controller: 'RegistrationCtrl'
         }
       }
     })

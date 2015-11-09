@@ -32,8 +32,42 @@ angular.module('starter', ['ionic','angularFileUpload', 'starter.controllers'])
       StatusBar.styleDefault();
     }
 
-    cordova.plugins.backgroundMode.setDefaults({ title:'医院OA'})
+    cordova.plugins.backgroundMode.setDefaults(
+      { title:'医院OA',
+        ticker:'医院OA正在后台运行',
+        text:'医院OA'
+      }
+
+    )
     cordova.plugins.backgroundMode.enable();
+
+    /**
+    cordova.plugins.notification.local.schedule({
+    text: "我的消息提醒测试",
+    at: 30000,
+    led: "FF0000"
+      });
+
+
+    cordova.plugins.notification.local.on('trigger',function (notification) {
+
+      try{
+        cordova.backgroundapp.show()
+        //cordova.fireDocumentEvent('resume');
+
+        setTimeout(function(){alert(11);},5000);
+      }catch(e){
+
+        alert('exceptionfiring resume event from native')
+
+      }
+
+
+
+    }, this);
+
+    **/
+
 
 
   });

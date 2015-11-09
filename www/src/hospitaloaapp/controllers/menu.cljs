@@ -38,6 +38,22 @@
                                     ))
 
 
+    (.$on $rootScope "firealarm" (fn [event] (println "firealarm")
+
+                                   (-> (.fromTemplateUrl  $ionicModal "templates/alarmmodal.html" (obj
+                                                                                         :scope $scope
+                                                                                         )) (.then  (fn [modal] (
+                                                                                                                   ! $scope.alarmmodal modal
+                                                                                                                   )
+                                                                                                       (.show $scope.alarmmodal)
+
+                                                                                                       )))
+
+
+
+                                    ))
+
+
     (.$on $rootScope "firechatend" (fn [event] (println "firechatend")
 
                                      (when-not (nil? $scope.videochatmodal)
@@ -94,6 +110,18 @@
 
 
                                 ))
+
+
+    (! $scope.closealarmmodel (fn[]
+
+
+                                (.remove $scope.alarmmodel)
+
+                                (! $scope.alarmmodel nil)
+
+                                  )
+
+         )
 
 
 

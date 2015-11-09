@@ -108,6 +108,12 @@
 
                                               )
 
+                            "firealarm" (do (println res.data)
+
+                                              (.$broadcast $rootScope "firealarm" res)
+
+                                              )
+
                             "default")
 
                             )

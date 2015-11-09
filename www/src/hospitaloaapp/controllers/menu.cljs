@@ -40,6 +40,8 @@
     (! $scope.user (obj :deptname js/localStorage.deptname  :username js/localStorage.username :password js/localStorage.password :realname js/localStorage.realname))
 
 
+    (! $scope.alarmvoice (new js/Audio "sound/alarm.wav"))
+
 
    (! $scope.login (fn[]
 
@@ -57,7 +59,11 @@
     (.$on $rootScope "firealarm" (fn [event data] (println "firealarm")
 
 
-                                   ;;(.show js/cordova.backgroundapp)
+                                   (.show js/cordova.backgroundapp)
+
+                                   (! $scope.alarmvoice.loop true)
+
+                                   (.play $scope.alarmvoice)
 
                                    (! $scope.alarmuser data.data)
 
@@ -153,11 +159,12 @@
 
 
     (! $scope.closealarmmodal (fn[]
-
+                                (.pause $scope.alarmvoice)
 
                                 (.remove $scope.alarmmodal)
 
                                 (! $scope.alarmmodal nil)
+
 
                                   )
 

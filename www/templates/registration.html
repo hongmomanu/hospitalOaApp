@@ -40,10 +40,10 @@
         <ion-content>
           <ion-refresher
             pulling-text="下拉刷新..."
-            on-refresh="doRefreshIamin()">
+            on-refresh="initregistrations()">
            </ion-refresher>
     <ion-list>
-      <ion-item    class="item item-avatar-left  item-icon-right" ng-repeat="iamitem in iamitems" href="#/app/iamitems/{{iamitem._id}}/{{iamitem.title}}">
+      <ion-item    class="item item-avatar-left  item-icon-right" ng-repeat="iamitem in iamitems" href="#/app/registration/{{iamitem._id}}/{{iamitem.title}}">
 
         <i class="icon ion-android-contacts" style="left: 18px;"></i>
           <div class="deptname">{{iamitem.title}}</div>
@@ -61,10 +61,10 @@
         <ion-content>
           <ion-refresher
             pulling-text="下拉刷新..."
-            on-refresh="doRefreshImake()">
+            on-refresh="initregistrations()">
            </ion-refresher>
     <ion-list>
-      <ion-item    class="item item-avatar-left  item-icon-right" ng-repeat="imakeitem in imakeitems" href="#/app/imakeitems/{{imakeitem._id}}/{{imakeitem.title}}">
+      <ion-item  on-hold="show_code_modal(imakeitem.title,imakeitem._id);"   class="item item-avatar-left  item-icon-right" ng-repeat="imakeitem in imakeitems" href="#/app/registration/{{imakeitem._id}}/{{imakeitem.title}}">
             <i class="icon ion-android-contacts" style="left: 18px;"></i>
           <div class="deptname">{{imakeitem.title}}</div>
           <i class="badge badge-positive  item-note elementCenterAlign">{{imakeitem.time | date:'yyyy-MM-dd HH:mm:ss'}}</i>

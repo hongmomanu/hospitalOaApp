@@ -35,11 +35,50 @@
     ))
 
 
-  (def.controller starter.controllers.RegistrationCtrl [$scope RegistrationService $ionicPopup  $ionicLoading $state RegistrationService]
+  (def.controller starter.controllers.RegistrationCtrl [$scope $ionicModal RegistrationService $ionicPopup  $ionicLoading $state RegistrationService]
   ;;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "RegistrationCtrl")
 
     (! $scope.data (obj ))
+
+
+
+    (! $scope.show_code_modal (fn [ title id]
+
+                                (println "show_code_modal" title id)
+
+                                (! $scope.barcodetitle title)
+
+
+                                (-> (.fromTemplateUrl  $ionicModal "templates/barcodemodal.html" (obj :scope $scope
+                                                                       )) (.then  (fn [modal] (
+                                                                                                 ! $scope.barcodemodal modal
+                                                                                                 )
+                                                                                     (.show $scope.barcodemodal)
+
+
+
+                                                  (.qrcode (js/$ "#scanbarcode") (obj :text	id  :width 200 :height 200))
+
+                                                                                     )))
+
+
+
+
+                                )
+
+
+       )
+
+
+    (! $scope.closebarcodemodal (fn []
+
+                                  (.remove $scope.barcodemodal)
+
+
+                                  ))
+
+
 
 
     (! $scope.initregistrations (fn []
@@ -68,6 +107,9 @@
 
 
                                )
+
+
+                                  (.$broadcast $scope "scroll.refreshComplete")
 
 
 
@@ -136,7 +178,19 @@
 
                                 ))
 
-    (! $scope.scanRegistration (fn[](println "scanRegistration")))
+    (! $scope.scanRegistration (fn[]
+
+
+                                 (println "scanRegistration")
+
+
+
+
+
+
+
+
+                                 ))
 
 
   )

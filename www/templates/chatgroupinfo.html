@@ -18,8 +18,8 @@
 
     <ion-footer-bar class="bar-frosted">
         <button class="button button-clear button-icon ion-images button-positive" ng-click="addimage()"></button>
-        <button class="button button-clear button-icon ion-mic-a button-positive" ng-click="addvoice()"></button>
-        <button class="button button-clear button-icon ion-videocamera button-positive" ng-click="addvideo()"></button>
+        <button class="button button-clear button-icon ion-mic-a button-positive" on-touch="startrecordvoice()" on-release="stoprecordvoice()"></button>
+        <button class="button button-clear button-icon ion-videocamera button-positive" style="display:none;" ng-click="addvideo()"></button>
         <button class="button button-clear button-icon ion-document-text button-positive" ng-click="addfiles()"></button>
         <label class="item-input-wrapper">
         <i   class="icon ion-ios-compose placeholder-icon"></i>

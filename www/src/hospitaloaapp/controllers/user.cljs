@@ -30,7 +30,7 @@
     ))
 
 
-  (def.controller starter.controllers.UserCtrl [$scope $sce MessageService  $rootScope $state $stateParams $ionicModal $ionicPopup $timeout UserService  $ionicLoading $compile]
+  (def.controller starter.controllers.UserCtrl [$scope $ionicHistory $sce MessageService  $rootScope $state $stateParams $ionicModal $ionicPopup $timeout UserService  $ionicLoading $compile]
   ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "UserCtrl")
 
@@ -57,6 +57,9 @@
                                         (.$broadcast $rootScope "updatemenu")
 
                                         (websocket/init  $rootScope)
+
+                                        (.nextViewOptions $ionicHistory (obj :disableBack true))
+
                                         (.go $state "app.depts")
 
 

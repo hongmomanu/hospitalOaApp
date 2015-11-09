@@ -31,6 +31,11 @@ angular.module('starter', ['ionic','angularFileUpload', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    cordova.plugins.backgroundMode.setDefaults({ title:'医院OA'})
+    cordova.plugins.backgroundMode.enable();
+
+
   });
 })
 

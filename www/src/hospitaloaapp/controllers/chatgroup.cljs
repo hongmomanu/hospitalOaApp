@@ -17,6 +17,224 @@
     (! $scope.deptname $stateParams.deptName)
 
 
+    (! $scope.addimage (fn []
+                         (.show $ionicActionSheet (obj :buttons [
+                {:text  "<b>拍照</b>" }
+                {:text  "<b>从图片库</b>" }
+            ]
+            :titleText "选择图片"
+            :cancelOnStateChange false
+            :cancelText "取消"
+            :cancel (fn [] (println "cancel"))
+            :buttonClicked (fn[index] (if (= index 0) ($scope.pictureView js/Camera.PictureSourceType.CAMERA)
+                                         ($scope.pictureView js/Camera.PictureSourceType.PHOTOLIBRARY) )
+                                true
+
+
+                         )))))
+
+
+    (! $scope.pictureView (fn [sourcetype]
+
+                            (.getPicture js/navigator.camera
+                                         (fn [fileurl]
+                                           (let [
+                                                 options (new js/FileUploadOptions)
+                                                 ft (new js/FileTransfer)
+                                                 ]
+                                             (! options.fileKey "file")
+                                             (! options.fileName (.substr fileurl (+ (.lastIndexOf fileurl "/") 1)))
+                                             (.upload ft fileurl (js/encodeURI (str js/serverurl "uploadfile"))
+                                                      (fn[suc](let [response (.parse js/JSON suc.response)]
+                                                            (if response.success (do
+                                                                                   (! $scope.messagetext (str "<img width=\"100%\" height=\"100%\"  src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></img>"))
+                                                                                  ( $scope.addmessage "image")
+
+
+                                                                                   ) (.alert $ionicPopup (obj :title "传输失败" :template "网络错误")))
+
+                                                                )) (fn[err](.alert $ionicPopup (obj :title "传输失败" :template "网络错误"))) options )
+                                             )
+
+
+
+                                                               ) (fn [message] (.alert $ionicPopup (obj :title "获取图片失败" :template message))
+                                                                               ) (obj :destinationType js/Camera.DestinationType.FILE_URI
+                                                                                   :sourceType sourcetype
+                                                                                   ))
+
+
+
+
+                            ))
+
+
+
+
+    (! $scope.captureUserMedia (fn [mediaConstraints successCallback errorCallback]
+
+
+
+                                 (->
+                                   js/navigator.mediaDevices
+                                  (.getUserMedia mediaConstraints)
+                                  (.then successCallback)
+                                  (.catch errorCallback)
+            )))
+
+    (! $scope.mediasream nil)
+    (! $scope.recordRTC nil)
+
+    (! $scope.startrecordvoice (fn [](do
+
+
+                              (println "startrecording")
+
+
+
+                               (let [
+                                     commonConfig (obj :onMediaCaptured (fn [stream]
+
+                                                                          (println "onMediaCaptured")
+                                                                          (! $scope.mediasream stream)
+                                                                          (println stream $scope.mediasream)
+                                                                          (! $scope.recordRTC (js/RecordRTC $scope.mediasream (obj :recorderType js/StereoAudioRecorder
+                                                                                                                                   :type "audio"
+                                                                                                                                   )))
+                                                                          (.startRecording $scope.recordRTC )
+
+                                                                          )
+                                                       :onMediaStopped (fn[](println "onMediaStopped"))
+
+                                                       :onMediaCapturingFailed (fn[error](println "onMediaCapturingFailed"))
+                                                       )
+
+                                     ]
+
+
+
+                                 ( $scope.captureUserMedia (obj :audio true) (fn [audioStream]
+
+                                                                                ;(println "audioStream" audioStream)
+                                                                                ;(! $scope.mediasream audioStream)
+
+                                                                               (commonConfig.onMediaCaptured audioStream)
+
+                                                                                ;(! $scope.recordRTC (js/RecordRTC $scope.mediasream))
+
+                                                                                ;(.startRecording $scope.recordRTC )
+
+
+                                                                                )  (fn [error](println "error" error)
+                                                                                     ;;(js/alert error)
+
+                                                                                     ))
+
+
+
+
+                                 )
+
+                                (.show $ionicLoading (obj :template "正在录音,松开完成") )
+
+
+
+
+
+
+
+
+
+                              )))
+
+
+    (! $scope.stoprecordvoice (fn [](do
+
+                               (.hide $ionicLoading)
+                              (println "stoprecordvoice")
+                              (.stopRecording $scope.recordRTC (fn [url]
+                                                                 (println url)
+
+                                                                 (let [blob $scope.recordRTC.blob
+                                                                        fileType "audio"
+                                                                        fileName "recording.wav"
+                                                                        formData  (new js/FormData)
+
+                                                                       ]
+                                                                   (println  "blob" blob)
+                                                                   (.append formData "filename" fileName)
+                                                                   (.append formData "file" blob)
+                                                                   (println  "hahahaha")
+
+
+                                                                   ($scope.makeXMLHttpRequest (str js/serverurl "uploadfile") formData
+                                                                                              (fn[type msg](
+                                                                                                            if (= type 0)
+                                                                                                            (.alert $ionicPopup (obj :title "发送失败" :template msg))
+                                                                                                            (let [
+                                                                                                                  response (.parse js/JSON msg)
+                                                                                                                  ]
+
+                                                                                                              (! $scope.messagetext (str "<audio width=\"100%\" height=\"100%\" preload=\"auto\"  controls=\"controls\" src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></audio>"))
+                                                                                                              ( $scope.addmessage "audio")
+                                                                                                              )
+
+
+                                                                                                            )))
+
+                                                                   )
+                                                                 (.stop $scope.mediasream stop)
+
+                                                                 ))
+
+
+                              )))
+
+
+    (! $scope.makeXMLHttpRequest (fn [url data callback] (let
+
+                [request (new js/XMLHttpRequest)]
+
+                (! request.onreadystatechange (fn[]
+
+                                                (when (and (= request.readyState 4) (= request.status 200))
+
+                                                  (callback 1  request.responseText)
+                                                  )
+                                                ))
+
+                (! request.upload.onloadstart (fn[]
+
+                                                  ;;(callback "Upload started...")
+
+                                                ))
+
+                (! request.upload.onprogress (fn[event]
+
+                                                  ;;(callback (str "Upload Progress..." (.round js/Math (* (/ event.loaded  event.total)  100) )))
+
+                                                ))
+
+
+
+
+                 (! request.upload.onerror (fn[event]
+
+                                                  (callback 0 "上传服务失败")
+
+                                                ))
+
+
+
+                (.open request "POST" url)
+
+
+                (.send request data)
+            )))
+
+
 
      (! $scope.uploader  (new FileUploader (obj :url (str js/serverurl "uploadfile"))))
 

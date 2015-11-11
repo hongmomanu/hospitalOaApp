@@ -1,0 +1,15 @@
+<ion-modal-view>
+
+  <ion-header-bar class="bar-stable bar-dark">
+    <h1 class="title">选择通知对象</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closepersonsmodal()">关闭</button>
+    </div>
+  </ion-header-bar>
+
+     <ion-content scroll="true" class="has-header padding">
+       <ion-tree-list items="topersons" template-url="templates/ion-item.tmpl.html" collapsed="true"></ion-tree-list>
+
+     </ion-content>
+
+</ion-modal-view>

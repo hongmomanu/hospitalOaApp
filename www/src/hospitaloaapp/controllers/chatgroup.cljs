@@ -47,7 +47,8 @@
                                              (.upload ft fileurl (js/encodeURI (str js/serverurl "uploadfile"))
                                                       (fn[suc](let [response (.parse js/JSON suc.response)]
                                                             (if response.success (do
-                                                                                   (! $scope.messagetext (str "<img width=\"100%\" height=\"100%\"  src=\"" js/serverurl "files/"
+                                                                                   (! $scope.messagetext (str "<img ng-click=\"showImages('" js/serverurl "files/"
+                                                                               response.filename "')\" width=\"100%\" height=\"100%\"  src=\"" js/serverurl "files/"
                                                                                response.filename "\"></img>"))
                                                                                   ( $scope.addmessage "image")
 
@@ -287,7 +288,8 @@
                                             "image" (do (println "image")
 
                                                       ($timeout (fn []
-                                                                (! $scope.messagetext (str "<img width=\"100%\" height=\"100%\"  src=\"" js/serverurl "files/"
+                                                                (! $scope.messagetext (str "<img ng-click=\"showImages('" js/serverurl "files/"
+                                                                               response.filename "')\"     width=\"100%\" height=\"100%\"  src=\"" js/serverurl "files/"
                                                                                response.filename "\"></img>")
 
                                                                  )
@@ -300,7 +302,8 @@
                                             (do (println "otherfiles")
 
                                                       ($timeout (fn []
-                                                                (! $scope.messagetext (str "<a   href=\"" js/serverurl "files/"
+                                                                (! $scope.messagetext (str "<a ng-click=\"openfile('" js/serverurl "files/"
+                                                                               response.filename "')\" href=\"" js/serverurl "files/"
                                                                                response.filename "\">" response.name  "</a>")
 
                                                                  )
@@ -320,7 +323,37 @@
 
 
 
+   (! $scope.openfile (fn[fileurl]
 
+                     (.open js/cordova.plugins.disusered fileurl (fn[]) (fn[err] (js/alert err)))
+
+                     ))
+
+
+    (! $scope.showImages (fn[imageurl]
+
+                           (! $scope.imagesrc imageurl)
+                           (! $scope.zoomMin  1)
+                           (-> (.fromTemplateUrl  $ionicModal "templates/imagemodal.html" (obj :scope $scope
+                                                                       )) (.then  (fn [modal] (
+                                                                                                 ! $scope.imagemodal modal
+                                                                                                 )
+                                                                                     (.show $scope.imagemodal)
+
+                                                                                     )))
+
+
+
+
+                           )
+
+
+       )
+
+    (! $scope.closeimageModal(fn []
+                               (.remove $scope.imagemodal)
+
+                               ))
 
     (! $scope.uploader.onErrorItem  (fn [fileItem response status headers] (println "error"  response
                                                                 (.hide $ionicLoading)
@@ -374,9 +407,11 @@
                                                               (println $scope.messages)
                                                               (aset js/newmessages data.data.groupid nil)
                                                               ;(.$broadcast $rootScope "updatedeptpersons")
-                                                              (println "hahahah")
+                                                              (.$broadcast $rootScope "canceltip" data.data._id)
                                                               (.$broadcast $rootScope "updatemsgnums")
                                                               (.scrollBottom $ionicScrollDelegate true)
+
+
 
                                                               )) 0)
 

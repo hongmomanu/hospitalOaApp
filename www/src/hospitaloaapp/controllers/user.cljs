@@ -69,6 +69,44 @@
                                         (.go $state "app.notification")
 
 
+                                        (.on js/cordova.plugins.notification.local "click" (fn [notification]
+
+
+
+                (let [
+                      notificationdata (.parse js/JSON notification.data)
+
+                      ]
+
+                  (case notificationdata.data.data.mtype
+
+
+                            "person" (do (println "person")
+                                              ;;(js/alert "person")
+                                              (.go $state "app.chatsingleinfo" (obj :messageId notificationdata.data.data.fromid :title  notificationdata.data.data.fromname) )
+
+
+                                              )
+
+                            "group" (do (println "group")
+
+                                              (.go $state "app.chatgroupinfo" (obj :deptId notificationdata.data.data.groupid :deptName  notificationdata.data.data.toname) )
+
+                                              )
+
+
+                            (.go $state "app.notification"))
+
+                  )
+
+
+
+
+
+                                                         ))
+
+
+
                                         )
                                       (.alert $ionicPopup (obj :title "登录提示" :template response.data.message))
 

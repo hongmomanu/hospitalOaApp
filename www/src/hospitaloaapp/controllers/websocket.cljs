@@ -55,7 +55,7 @@
                                 res (.parse js/JSON event.data)
                                 ]
 
-
+                          (println "websockty" res)
                           (case res.type
                             "message" (do
                                         (println res.data.mtype)
@@ -79,6 +79,8 @@
 
                                         (.$broadcast $rootScope "updatemsgnums")
 
+                                        (.$broadcast $rootScope "showalerttip" res)
+
 
                                         (if (or (nil? res.data.groupid) (= "" res.data.groupid) )
 
@@ -91,12 +93,13 @@
                                         )
                             "notification" (do (println "notification" res.data)
 
-                                             (println "notificationnotification" js/newnotifications)
+                                             (println "notificationnotification")
+                                             (set! js/newnotifications (.concat js/newnotifications (clj->js [res])))
                                              (.$broadcast $rootScope "receivenotification" res)
 
-                                             (set! js/newnotifications (.concat js/newnotifications (clj->js [res])))
-
                                              (.$broadcast $rootScope "updatenotificationnums")
+
+                                             (.$broadcast $rootScope "showalerttip" res)
 
 
                                              )

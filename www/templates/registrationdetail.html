@@ -1,0 +1,18 @@
+<ion-view view-title="{{title}}">
+  <ion-content>
+    <ion-refresher
+            pulling-text="下拉刷新..."
+            on-refresh="initdetais()">
+    </ion-refresher>
+    <ion-list>
+      <ion-item class="item item-avatar-left  item-icon-right" ng-repeat="person in persons">
+
+          <i class="icon ion-chatbox-working" style="left: 18px;"></i>
+          <div class="deptname">{{person.realname}}</div>
+          <i class="badge badge-positive item-note elementCenterAlign">{{person.deptname}}</i>
+
+
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

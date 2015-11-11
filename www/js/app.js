@@ -95,6 +95,18 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
 
   });
 })
+.directive('compilehtml', ['$compile', function ($compile) {
+  return function(scope, element, attrs) {
+    scope.$watch(
+      function(scope) {
+        return scope.$eval(attrs.compilehtml);
+      },
+      function(value) {
+        element.html(value);
+        $compile(element.contents())(scope);
+      }
+   )};
+  }])
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider

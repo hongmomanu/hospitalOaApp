@@ -43,6 +43,11 @@
     (! $scope.alarmvoice (new js/Audio "sound/alarm.wav"))
 
 
+
+
+
+
+
    (! $scope.login (fn[]
 
                   (.$broadcast $rootScope "login")
@@ -104,14 +109,38 @@
 
     (! $scope.seennotification (fn[]
 
-                                  (set! js/newnotifications [])
+                                  (set! js/newnotifications (clj->js []))
                                   (.$broadcast $rootScope "updatenotificationnums")
 
                                  ))
 
     (.$on $rootScope "updatenotificationnums" (fn [event] (println "updatenotificationnums")
 
-                                   (! $scope.notificationnums js/newnotifications.length)
+                                   (! $scope.notificationnums (if (= 0 js/newnotifications.length) nil js/newnotifications.length))
+
+
+                                    ))
+
+
+    (.$on $rootScope "showalerttip" (fn [event data] (println "showalerttip")
+                                      (try (.schedule js/cordova.plugins.notification.local
+
+                                                 (obj :id  data.data._id
+                                                      :text (str data.data.fromname ":" data.data.content)
+                                                      :data  (obj :data data))) (catch js/Error e e))
+
+
+
+
+
+                                    ))
+
+
+    (.$on $rootScope "canceltip" (fn [event id] (println "canceltip")
+
+
+                                      (.cancel js/cordova.plugins.notification.local id (fn[] ) )
+
 
 
                                     ))

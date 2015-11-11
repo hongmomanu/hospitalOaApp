@@ -10,7 +10,7 @@
             on-refresh="doRefresh()">
         </ion-refresher>
         <ol class="messages">
-            <li ng-repeat="message in messages" ng-bind-html="trustHtml(message.realname +message.content)" class="{{message.local?'localmessage':'remotemessage'}}">
+            <li ng-repeat="message in messages" compilehtml="message.realname +message.content"  class="{{message.local?'localmessage':'remotemessage'}}">
 
             </li>
         </ol>
@@ -28,7 +28,7 @@
 
             <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="personmsgfiles"  />
 
-        <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>-->
+        <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i> ng-bind-html="trustHtml(message.realname +message.content)"-->
         </label>
         <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addmessage('text')">发送</button>
     </ion-footer-bar>

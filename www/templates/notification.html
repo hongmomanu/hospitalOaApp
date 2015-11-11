@@ -1,16 +1,16 @@
-<ion-view view-title="{{deptname}}">
+<ion-view view-title="公告栏">
 
     <ion-header-bar frosted-bar class="bar-frosted">
         <h1 class="title">Blurred!</h1>
     </ion-header-bar>
 
-    <ion-content class="padding" start-y="120" >
+    <ion-content class="padding" start-y="120">
         <ion-refresher
             pulling-text="下拉加载..."
             on-refresh="doRefresh()">
         </ion-refresher>
         <ol class="messages">
-          <li ng-repeat="message in messages" compilehtml="message.realname +message.content" class="{{message.local?'localmessage':'remotemessage'}}">
+          <li ng-repeat="message in messages" compilehtml="message.realname +message.content"  class="{{message.local?'localmessage':'remotemessage'}}">
 
             </li>
         </ol>
@@ -21,14 +21,16 @@
         <button class="button button-clear button-icon ion-mic-a button-positive" on-touch="startrecordvoice()" on-release="stoprecordvoice()"></button>
         <button class="button button-clear button-icon ion-videocamera button-positive" style="display:none;" ng-click="addvideo()"></button>
         <button class="button button-clear button-icon ion-document-text button-positive" ng-click="addfiles()"></button>
+        <button class="button button-clear button-icon ion-android-person-add button-positive" ng-click="showpersons()"></button>
         <label class="item-input-wrapper">
         <i   class="icon ion-ios-compose placeholder-icon"></i>
         <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="...">
-        <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="groupmsgfiles"  />
+        <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="notificationmsgfiles"  />
 
-        <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>-->
+        <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>  ng-bind-html="trustHtml(message.realname +message.content)"-->
         </label>
-        <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addmessage('text')">发送</button>
+
+        <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addnotification('text')">发送</button>
     </ion-footer-bar>
 
 </ion-view>

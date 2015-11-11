@@ -7,18 +7,14 @@
   </ion-header-bar>
 
 
-    <div class="scroll-content has-header  light">
-
-        <button class="button button-block button-assertive">
-          {{alarmuser.deptname}}: {{alarmuser.realname}}
-        </button>
-
-        <div style="text-align:center;">
-
-        <img class="mg-responsive" width="200px" height="167px"  src="img/RedAlert.gif"/>
-
+    <ion-content>
+        <div class="alarmbutton" style="text-align:center;line-height:2em;height:100%;color:red;">
+        {{alarmuser.deptname}}: {{alarmuser.realname}} <br> 发出报警
         </div>
+    </ion-content>
 
-    </div>
+
+
+
 
 </ion-modal-view>

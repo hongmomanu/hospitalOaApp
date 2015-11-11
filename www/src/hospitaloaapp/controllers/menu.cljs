@@ -99,6 +99,23 @@
 
                                     ))
 
+    (! $scope.notificationnums nil)
+
+
+    (! $scope.seennotification (fn[]
+
+                                  (set! js/newnotifications [])
+                                  (.$broadcast $rootScope "updatenotificationnums")
+
+                                 ))
+
+    (.$on $rootScope "updatenotificationnums" (fn [event] (println "updatenotificationnums")
+
+                                   (! $scope.notificationnums js/newnotifications.length)
+
+
+                                    ))
+
 
 
     (! $scope.sendalarm (fn[]

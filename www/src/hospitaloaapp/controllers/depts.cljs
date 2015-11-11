@@ -25,15 +25,25 @@
   ;;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
     (println "messages")
     (.show $ionicLoading (obj :template "加载中.."  :duration 5000))
-    (-> DeptsService
+
+    (! $scope.datainit (fn[]
+
+                        (-> DeptsService
                            (.getdepts)
                            (.then (fn [response]
                                     (.hide $ionicLoading)
 
                                     ;(println (doall (map #(conj % {:title (:deptname %) }) response.data)))
                                      (! $scope.depts response.data)
+                                    (.$broadcast $scope "scroll.refreshComplete")
 
                                     )))
+
+                        ))
+
+
+    ($scope.datainit)
+
 
 
 
@@ -43,6 +53,20 @@
                                 (.go $state "app.chatgroupinfo" (obj :deptId deptid :deptName  deptname) )
 
                                 ))
+
+
+    (! $scope.show_detail (fn [ deptid deptname]
+
+                                (println "show_detail" deptname)
+                                (.go $state "app.deptperson" (obj :deptId deptid :deptName  deptname) )
+
+                                ))
+
+    (! $scope.doRefresh (fn[]
+                          ($scope.datainit)
+
+
+                          ))
 
 
 

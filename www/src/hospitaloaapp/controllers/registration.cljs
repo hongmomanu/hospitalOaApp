@@ -31,6 +31,15 @@
 
                       )
 
+   :addregist (fn [userid rid]
+
+
+                (-> $http
+                  (.get (str js/serverurl "addregist") (obj :params {:userid userid :rid rid}))
+                  (.then (fn [response] response)))
+
+                )
+
 
     ))
 
@@ -182,6 +191,46 @@
 
 
                                  (println "scanRegistration")
+
+                                 (.scan js/cordova.plugins.barcodeScanner (fn [result]
+
+
+
+
+                          (-> RegistrationService
+                           (.addregist  js/localStorage.userid result.text)
+                           (.then (fn [response]
+
+                                  (if (js->clj response.data.success)
+                                      (do
+                                        (println "data added success")
+                                        (.alert $ionicPopup (obj :title "提示" :template "签到成功"))
+
+                                        ($scope.initregistrations)
+
+                                        )
+                                      (.alert $ionicPopup (obj :title "失败" :template response.data.message))
+
+
+                                      )
+
+
+                                    ))
+
+
+                               )
+
+
+
+
+
+
+                                                                            ) (fn[error]
+
+                                                                                          (.alert $ionicPopup (obj :title "失败" :template error))
+
+                                                                                          ))
+
 
 
 

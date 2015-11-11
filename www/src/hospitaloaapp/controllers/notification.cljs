@@ -1,4 +1,4 @@
-(ns hospitaloaapp.controllers.chatgroup
+(ns hospitaloaapp.controllers.notification
   (:require [clojure.browser.repl :as repl])
   (:use [jayq.core :only [$ css html]]
         )
@@ -10,11 +10,50 @@
 
 (defn init []
 
-  (def.controller starter.controllers.ChatGroupCtrl [$sce $ionicActionSheet $scope FileUploader  $location $timeout $ionicPopup $ionicLoading MessageService  $rootScope $ionicScrollDelegate $stateParams $compile]
-  ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
-    (println "ChatGroupCtrl" $stateParams)
 
-    (! $scope.deptname $stateParams.deptName)
+  (def.service starter.NotificationService [$http]
+  (obj
+    :getnotificationhistory (fn [userid lasttime]
+
+                 (-> $http
+                  (.post (str js/serverurl "getnotificationhistory") (obj
+                                                              :userid userid
+                                                              :time lasttime))
+                  (.then (fn [response] response))
+                  (.catch (fn[response] response))
+
+                    )
+
+                 )
+
+   :getdeptpersonstree (fn []
+
+                 (-> $http
+                  (.get (str js/serverurl "getdeptpersonstree") )
+                  (.then (fn [response] response))
+                  (.catch (fn[response] response))
+
+                    )
+
+                 )
+
+   :addnotification (fn [content ftype fromid toids  fromname]
+                (-> $http
+                  (.post (str js/serverurl "addnotification") (obj :content content :ftype ftype
+                                                              :fromid fromid :toids toids
+                                                              :fromname fromname ))
+                  (.then (fn [response] response))
+                  (.catch (fn[response] response))
+
+                    ))
+
+   ))
+
+  (def.controller starter.controllers.NotificationCtrl [$sce $ionicModal NotificationService $ionicActionSheet $scope FileUploader  $location $timeout $ionicPopup $ionicLoading   $rootScope $ionicScrollDelegate $stateParams $compile]
+  ;(! $scope.tipdetail (fn [bankid] (js/alert "wwwww")))
+    (println "NotificationCtrl")
+
+
 
 
     (! $scope.addimage (fn []
@@ -49,7 +88,7 @@
                                                             (if response.success (do
                                                                                    (! $scope.messagetext (str "<img width=\"100%\" height=\"100%\"  src=\"" js/serverurl "files/"
                                                                                response.filename "\"></img>"))
-                                                                                  ( $scope.addmessage "image")
+                                                                                  ( $scope.addnotification "image")
 
 
                                                                                    ) (.alert $ionicPopup (obj :title "传输失败" :template "网络错误")))
@@ -178,7 +217,7 @@
 
                                                                                                               (! $scope.messagetext (str "<audio width=\"100%\" height=\"100%\" preload=\"auto\"  controls=\"controls\" src=\"" js/serverurl "files/"
                                                                                response.filename "\"></audio>"))
-                                                                                                              ( $scope.addmessage "audio")
+                                                                                                              ( $scope.addnotification "audio")
                                                                                                               )
 
 
@@ -263,7 +302,7 @@
                                                                                response.filename "\"></video>")
 
                                                                  )
-                                                                ( $scope.addmessage "video")
+                                                                ( $scope.addnotification "video")
 
                                                                 ) 0 )
 
@@ -279,7 +318,7 @@
                                                                                response.filename "\"></audio>")
 
                                                                  )
-                                                                ( $scope.addmessage "audio")
+                                                                ( $scope.addnotification "audio")
 
                                                                 ) 0 )
                                                       )
@@ -291,7 +330,7 @@
                                                                                response.filename "\"></img>")
 
                                                                  )
-                                                                ( $scope.addmessage "image")
+                                                                ( $scope.addnotification "image")
 
                                                                 ) 0 )
 
@@ -304,7 +343,7 @@
                                                                                response.filename "\">" response.name  "</a>")
 
                                                                  )
-                                                                ( $scope.addmessage "otherfiles")
+                                                                ( $scope.addnotification "otherfiles")
 
                                                                 ) 0 )
 
@@ -359,28 +398,20 @@
                               )))
 
 
-    (.$on $scope "receivegmsg" (fn [event data] (println "receivegmsg" event data (= data.data.fromid data.data.toid))
+    (.$on $scope "receivenotification" (fn [event data] (println "receivenotification")
 
                                      (when-not (= data.data.fromid data.data.toid)
 
 
-                                                   (when (> (js->clj(-> $location
-                                                       (.url)
-
-                                                       (.indexOf data.data.groupid)
-
-                                                       )) 0) ($timeout (fn[](do (.push $scope.messages (obj :time data.data.time  :content data.data.content :local false :realname
+                                                    ($timeout (fn[](do (.push $scope.messages (obj :time data.data.time  :content data.data.content :local false :realname
                                                                     (str "<a>" data.data.fromname (.date js/$.format (new js/Date data.data.time ) "M-dd hh:mm") "</a>")))
                                                               (println $scope.messages)
-                                                              (aset js/newmessages data.data.groupid nil)
-                                                              ;(.$broadcast $rootScope "updatedeptpersons")
-                                                              (println "hahahah")
-                                                              (.$broadcast $rootScope "updatemsgnums")
+
                                                               (.scrollBottom $ionicScrollDelegate true)
 
                                                               )) 0)
 
-                                                     )
+
 
 
 
@@ -404,12 +435,82 @@
 
 
 
+    (! $scope.topersons (clj->js [
 
-    (! $scope.addmessage (fn [msgtype]
+    ]))
 
-                           (.show $ionicLoading (obj :template "传输中..."  :duration 5000))
-                           (-> MessageService
-                           (.addgroupmessage (str "<p>" $scope.messagetext "</p>") msgtype js/localStorage.userid $stateParams.deptId  $stateParams.deptId "group" $stateParams.deptName js/localStorage.realname)
+
+    (! $scope.getpersons (fn[]
+
+                           (-> NotificationService
+                           (.getdeptpersonstree)
+                           (.then (fn [response]
+                                    (! $scope.topersons response.data)))
+
+
+                               )
+
+
+
+                           ))
+
+
+    ($scope.getpersons)
+
+    (! $scope.showpersons (fn[]
+            (if (nil? $scope.topersonsmodal) (-> (.fromTemplateUrl  $ionicModal "templates/notificationpersonsmodal.html" (obj :scope $scope
+                                                                       )) (.then  (fn [modal] (
+                                                                                                 ! $scope.topersonsmodal modal
+                                                                                                 )
+                                                                                     (.show $scope.topersonsmodal)
+
+                                                                                     )))
+
+                           (.show $scope.topersonsmodal)
+
+                           )
+
+
+
+                            ))
+
+
+    (! $scope.closepersonsmodal(fn[]
+
+                                 ;;(println $scope.topersons)
+                                 (.hide $scope.topersonsmodal)
+
+                                 ))
+
+
+    (! $scope.getchecked (fn[]
+
+
+                           (let [
+                                 cljpersons (js->clj $scope.topersons)
+
+                                 children (apply concat  (map #(into [] (get % "tree")) cljpersons))
+
+                                 checkeds (filter (fn [x](and (get x "checked") (not= js/localStorage.userid (get x "id")) )) children)
+
+                                 ]
+
+                               (map #(get % "id") checkeds)
+
+                             )
+
+                           ))
+
+    (! $scope.addnotification (fn [msgtype]
+
+                           (println    ($scope.getchecked))
+                           (if (or (nil? $scope.messagetext) (= $scope.messagetext ""))
+
+                             (.alert $ionicPopup (obj :title "提示" :template "消息不能为空"))(let [toids (clj->js ($scope.getchecked))]
+                                    (println toids)
+                                    (.show $ionicLoading (obj :template "传输中..."  :duration 5000))
+                           (-> NotificationService
+                           (.addnotification (str "<p>" $scope.messagetext "</p>") msgtype js/localStorage.userid toids  js/localStorage.realname)
                            (.then (fn [response]
 
 
@@ -422,8 +523,6 @@
                                         (println $scope.messages)
 
                                         (! $scope.messagetext "")
-
-                                        (makemessage $stateParams.deptId $stateParams.deptName $rootScope)
 
                                         (.scrollBottom $ionicScrollDelegate true)
 
@@ -438,6 +537,11 @@
 
 
                                )
+                                    )
+
+                             )
+
+
 
 
                            ) )
@@ -448,16 +552,16 @@
        ))
 
 
-    (let [msgs (aget js/newmessages $stateParams.deptId)]
-        (doall (map #(.$broadcast $scope "receivegmsg" (clj->js %)) (js->clj msgs)))
+    (let [msgs js/newnotifications ]
+        (doall (map #(.$broadcast $scope "receivenotification" (clj->js %)) (js->clj msgs)))
          )
 
 
     (! $scope.doRefresh (fn[]
 
                           (println "doRefresh")
-                          (-> MessageService
-                           (.getgroupmessagehistory js/localStorage.userid $stateParams.deptId  (if (nil? (first $scope.messages)) (.date js/$.format (new js/Date) "yyyy-M-ddTH:mm:ssZ") (aget (first $scope.messages) "time")) )
+                          (-> NotificationService
+                           (.getnotificationhistory js/localStorage.userid  (if (nil? (first $scope.messages)) (.date js/$.format (new js/Date) "yyyy-M-ddTH:mm:ssZ") (aget (first $scope.messages) "time")) )
                            (.then (fn [response]
 
 
@@ -497,26 +601,4 @@
 
   )
 
-(defn makemessage [deptId deptName $rootScope]
 
-
-  (println "newmessages group group group" deptId deptName)
-  (let [
-
-        message  (js->clj js/localStorage.messages)
-        messages (if (nil? message) {} (js->clj (.parse js/JSON js/localStorage.messages)))
-
-
-        deloldmessages (dissoc messages  deptId)
-
-        newmessages (assoc deloldmessages (keyword deptId) {:type "group" :title deptName :id deptId})
-
-        ]
-
-
-    (! js/localStorage.messages (.stringify js/JSON (clj->js newmessages)))
-      (.$broadcast $rootScope "messageslistupdate")
-
-    )
-
-  )

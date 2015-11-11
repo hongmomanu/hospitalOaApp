@@ -5,14 +5,20 @@
             on-refresh="doRefresh()">
     </ion-refresher>
     <ion-list>
-      <ion-item  on-hold="show_broad_chat(dept.title,dept._id);" class="item item-avatar-left  item-icon-right" ng-repeat="dept in depts" href="#/app/depts/{{dept._id}}/{{dept.title}}">
 
-        <i class="icon ion-android-contacts" style="left: 18px;"></i>
-          <div class="deptname">{{dept.title}}</div>
-          <i class="badge badge-assertive item-note elementCenterAlign">{{dept.persons}}</i>
-          <i class="icon ion-ios-arrow-right"></i>
+        <div mn-touch  secure-tap="show_detail(dept._id,dept.title)" hold="show_broad_chat(dept.title,dept._id)"  ng-repeat="dept in depts">
 
-      </ion-item>
+         <ion-item   class="item item-avatar-left  item-icon-right">   <!--href="#/app/depts/{{dept._id}}/{{dept.title}}" --->
+
+            <i class="icon ion-android-contacts" style="left: 18px;"></i>
+              <div class="deptname">{{dept.title}}</div>
+              <i class="badge badge-assertive item-note elementCenterAlign">{{dept.persons}}</i>
+              <i class="icon ion-ios-arrow-right"></i>
+
+        </ion-item>
+
+        </div>
+
     </ion-list>
   </ion-content>
 </ion-view>

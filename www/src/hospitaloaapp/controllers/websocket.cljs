@@ -89,6 +89,17 @@
 
 
                                         )
+                            "notification" (do (println "notification" res.data)
+
+                                             (println "notificationnotification" js/newnotifications)
+                                             (.$broadcast $rootScope "receivenotification" res)
+
+                                             (set! js/newnotifications (.concat js/newnotifications (clj->js [res])))
+
+                                             (.$broadcast $rootScope "updatenotificationnums")
+
+
+                                             )
 
                             "firechatvideo" (do (println res.data)
 
@@ -136,6 +147,7 @@
                                        (clj->js {:userid js/localStorage.userid})))
 
                        (.$broadcast $rootScope "getunreadmsgs")
+                       (.$broadcast $rootScope "getunreadnotifications")
 
                         ))
 

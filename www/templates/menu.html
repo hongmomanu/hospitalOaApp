@@ -36,8 +36,17 @@
         <ion-item menu-close class="item item-avatar-left  item-icon-right"   href="#/app/registration">
           <i class="icon ion-paintbrush" style="left: 18px;"></i>
           <i class="icon ion-ios-arrow-forward"></i>
-          <div class="menuname">签到</div>
+          <div class="menuname">会议签到</div>
+
         </ion-item>
+
+        <ion-item menu-close class="item item-avatar-left  item-icon-right"  ng-click="seennotification()"  href="#/app/notification">
+          <i class="icon ion-ios-email-outline" style="left: 18px;"></i>
+          <i class="icon ion-ios-arrow-forward"></i>
+          <div class="menuname">院内通知</div>
+          <i class="badge badge-assertive item-note elementCenterAlign">{{notificationnums}}</i>
+        </ion-item>
+
         <ion-item menu-close class="item item-avatar-left  item-icon-right"    href="#/app/messages">
           <i class="icon ion-chatbubbles" style="left: 18px;"></i>
           <i class="icon ion-ios-arrow-forward"></i>

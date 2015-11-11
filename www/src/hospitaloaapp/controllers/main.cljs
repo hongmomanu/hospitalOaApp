@@ -6,6 +6,7 @@
             [hospitaloaapp.controllers.depts :as depts]
             [hospitaloaapp.controllers.dept :as dept]
             [hospitaloaapp.controllers.registration :as registration]
+            [hospitaloaapp.controllers.notification :as notification]
             [hospitaloaapp.controllers.registrationdetail :as registrationdetail]
             [hospitaloaapp.controllers.user :as user]
             [hospitaloaapp.controllers.menu :as menu]
@@ -47,6 +48,7 @@
 (message/init)
 (depts/init)
 (registration/init)
+(notification/init)
 (registrationdetail/init)
 (dept/init)
 (chatgroup/init)

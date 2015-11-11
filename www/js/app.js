@@ -8,15 +8,16 @@ var serverurl= "http://192.168.2.100:3000/"
 var videorurl="http://111.1.76.108:4450/";//Globle_Variable.serverurl.replace(/(:\d+)/g,":4450");
 var socketobj=null;
 var newmessages={};
+var newnotifications=[];
 var isvideochating=false;
  var audio_context;
 var recorder;
 
 
 
-angular.module('starter', ['ionic','angularFileUpload', 'starter.controllers'])
+angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'starter.controllers'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform,$ionicHistory) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -40,6 +41,28 @@ angular.module('starter', ['ionic','angularFileUpload', 'starter.controllers'])
 
     )
     cordova.plugins.backgroundMode.enable();
+
+
+
+
+    $ionicPlatform.registerBackButtonAction(function(e) {
+            e.preventDefault();
+
+
+            if ($ionicHistory.backView()) {
+
+                $ionicHistory.goBack(-1);
+            } else {
+                navigator.Backbutton.goHome(function() {
+                //console.log('success')
+               }, function() {
+                //console.log('fail')
+              });
+            }
+            return false;
+        }, 101);
+
+
 
     /**
     cordova.plugins.notification.local.schedule({
@@ -120,12 +143,32 @@ angular.module('starter', ['ionic','angularFileUpload', 'starter.controllers'])
       }
     })
 
+  .state('app.notification', {
+      url: '/notification',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/notification.html',
+          controller: 'NotificationCtrl'
+        }
+      }
+    })
+
   .state('app.registration', {
       url: '/registration',
       views: {
         'menuContent': {
           templateUrl: 'templates/registration.html',
           controller: 'RegistrationCtrl'
+        }
+      }
+    })
+
+  .state('app.registrationdetail', {
+    url: '/registration/:registrationid/:registrationtitle',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/registrationdetail.html',
+          controller: 'RegistrationDetailCtrl'
         }
       }
     })

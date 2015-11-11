@@ -27,6 +27,12 @@
                   (.then (fn [response] response))))
 
 
+   :fireunreadnotifications (fn [userid]
+                (-> $http
+                  (.get (str js/serverurl "getunreadnotifications") (obj :params {:userid  userid}  ) )
+                  (.then (fn [response] response))))
+
+
     ))
 
 
@@ -60,7 +66,7 @@
 
                                         (.nextViewOptions $ionicHistory (obj :disableBack true))
 
-                                        (.go $state "app.depts")
+                                        (.go $state "app.notification")
 
 
                                         )
@@ -132,6 +138,19 @@
                            (.fireunreadmsgs js/localStorage.userid js/localStorage.deptid)
                            (.then (fn [response]
                                     (println "getunreadmsgs")
+
+                                    )))
+                                            ))
+
+
+
+
+ (.$on $rootScope "getunreadnotifications" (fn [event]
+
+                                       (-> UserService
+                           (.fireunreadnotifications js/localStorage.userid)
+                           (.then (fn [response]
+                                    (println "getunreadnotifications")
 
                                     )))
                                             ))

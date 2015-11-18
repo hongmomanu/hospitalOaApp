@@ -41,11 +41,11 @@
 (defn init [$rootScope]
 
   (let [
-        socket (new js/WebSocket socketurl)
+        socket (new js/ReconnectingWebSocket socketurl)
         ]
 
     (println js/socket "hahha")
-    (when-not (nil? js/socketobj) (.close js/socketobj))
+    ;(when-not (nil? js/socketobj) (.close js/socketobj))
 
     (set! js/socketobj socket)
 
@@ -136,9 +136,12 @@
 
                           ))
 
-    (! socket.onclose (fn [event]
+    #_(! socket.onclose (fn [event]
 
                         (println "closed")
+                        ;(.show js/cordova.backgroundapp)
+                        ;(js/alert "网络连接closed")
+                        ;(init $rootScope)
 
                         ))
 
@@ -156,9 +159,13 @@
 
 
 
-    (! socket.error (fn [event]
+    #_(! socket.onerror (fn [event]
 
                         (println "error")
+                        ;(init $rootScope)
+                        ;(.show js/cordova.backgroundapp)
+                        ;(js/alert "网络连接error")
+
 
                         ))
 

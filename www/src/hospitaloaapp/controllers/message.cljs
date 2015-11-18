@@ -176,7 +176,7 @@
     (! $scope.addvideo (fn[]
                          (! $scope.videochaturl (.trustAsResourceUrl $sce (str js/videorurl "?handle=" js/localStorage.userid "&touser=" $stateParams.messageId )))
 
-                         (if (nil? $scope.videochatmodal) (-> (.fromTemplateUrl  $ionicModal "templates/videochatmodal.html" (obj :scope $scope
+                         (if (nil? $scope.videochatmodal) (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/" "templates/videochatmodal.html") (obj :scope $scope
                                                                        )) (.then  (fn [modal] (
                                                                                                  ! $scope.videochatmodal modal
                                                                                                  )
@@ -356,7 +356,7 @@
 
                            (! $scope.imagesrc imageurl)
                            (! $scope.zoomMin  1)
-                           (-> (.fromTemplateUrl  $ionicModal "templates/imagemodal.html" (obj :scope $scope
+                           (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/" "templates/imagemodal.html" )(obj :scope $scope
                                                                        )) (.then  (fn [modal] (
                                                                                                  ! $scope.imagemodal modal
                                                                                                  )

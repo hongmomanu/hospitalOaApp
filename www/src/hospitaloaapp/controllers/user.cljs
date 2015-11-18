@@ -128,7 +128,19 @@
     (! $scope.loginData  {})
 
 
-  (-> (.fromTemplateUrl  $ionicModal "templates/login.html" (clj->js {
+    (! $scope.signInchange (fn[]
+
+                             (! js/localStorage.username $scope.user.username)
+                             (! js/localStorage.password $scope.user.password)
+
+                             (! js/window.location.href "")
+                             ;;(.signIn $scope)
+
+
+                             ))
+
+
+  (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/" "templates/login.html?t=" (rand-int 30) ) (clj->js {
                                                                        :scope $scope
                                                                        })) (.then  (fn [modal] (
                                                                                                  ! $scope.modal modal

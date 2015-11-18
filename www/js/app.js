@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-var serverurl= "http://192.168.2.100:3000/"
+var serverurl= localStorage.serverurl;
 var videorurl="http://111.1.76.108:4450/";//Globle_Variable.serverurl.replace(/(:\d+)/g,":4450");
 var socketobj=null;
 var newmessages={};
@@ -17,7 +17,7 @@ var recorder;
 
 angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'starter.controllers'])
 
-.run(function($ionicPlatform,$ionicHistory) {
+.run(function($ionicPlatform,$ionicHistory,$interval) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -39,8 +39,21 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
         text:'医院OA'
       }
 
-    )
+    );
     cordova.plugins.backgroundMode.enable();
+
+
+
+     setInterval(function () {
+
+      //cordova.backgroundapp.show();
+       if(socketobj&&socketobj.readyState!= 1){
+
+          socketobj.send({msg : "heartbig"})
+
+       }
+
+      }, 10000)
 
 
 
@@ -113,15 +126,16 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
 
     .state('user', {
                 url: '/login',
-                templateUrl: 'templates/loginfull.html',
-                //templateUrl: localStorage.serverurl + 'templates/login.html?t=' + (new Date().getTime()),
+                //templateUrl: 'templates/loginfull.html',
+                templateUrl: localStorage.serverurl+'client/'+'templates/loginfull.html?t='+(new Date().getTime()),
                 controller: 'UserCtrl'
             })
 
     .state('app', {
     url: '/app',
     abstract: true,
-    templateUrl: 'templates/menu.html',
+    //templateUrl: 'templates/menu.html',
+      templateUrl: localStorage.serverurl+'client/'+'templates/menu.html?t='+(new Date().getTime()),
     controller: 'MenuCtrl'
   })
 
@@ -129,7 +143,8 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
     url: '/search',
     views: {
       'menuContent': {
-        templateUrl: 'templates/search.html'
+        //templateUrl: 'templates/search.html'
+        templateUrl: localStorage.serverurl+'client/'+'templates/search.html?t='+(new Date().getTime())
       }
     }
   })
@@ -138,7 +153,8 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
     url: '/depts',
     views: {
       'menuContent': {
-        templateUrl: 'templates/depts.html',
+        //templateUrl: 'templates/depts.html',
+        templateUrl: localStorage.serverurl+'client/'+'templates/depts.html?t='+(new Date().getTime()),
         controller: 'DeptsCtrl'
       }
     }
@@ -149,7 +165,8 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
       //cache: true,
       views: {
         'menuContent': {
-          templateUrl: 'templates/deptpersons.html',
+          //templateUrl: 'templates/deptpersons.html',
+          templateUrl: localStorage.serverurl+'client/'+'templates/deptpersons.html?t='+(new Date().getTime()),
           controller: 'DeptCtrl'
         }
       }
@@ -159,7 +176,8 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
       url: '/notification',
       views: {
         'menuContent': {
-          templateUrl: 'templates/notification.html',
+          //templateUrl: 'templates/notification.html',
+          templateUrl: localStorage.serverurl+'client/'+'templates/notification.html?t='+(new Date().getTime()),
           controller: 'NotificationCtrl'
         }
       }
@@ -169,8 +187,20 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
       url: '/registration',
       views: {
         'menuContent': {
-          templateUrl: 'templates/registration.html',
+          //templateUrl: 'templates/registration.html',
+          templateUrl: localStorage.serverurl+'client/'+'templates/registration.html?t='+(new Date().getTime()),
           controller: 'RegistrationCtrl'
+        }
+      }
+    })
+
+  .state('app.setting', {
+      url: '/setting',
+      views: {
+        'menuContent': {
+          //templateUrl: 'templates/setting.html',
+          templateUrl: localStorage.serverurl+'client/'+'templates/setting.html?t='+(new Date().getTime()),
+          controller: 'SettingCtrl'
         }
       }
     })
@@ -179,7 +209,8 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
     url: '/registration/:registrationid/:registrationtitle',
       views: {
         'menuContent': {
-          templateUrl: 'templates/registrationdetail.html',
+          //templateUrl: 'templates/registrationdetail.html',
+          templateUrl: localStorage.serverurl+'client/'+'templates/registrationdetail.html?t='+(new Date().getTime()),
           controller: 'RegistrationDetailCtrl'
         }
       }
@@ -188,7 +219,8 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
       url: '/messages',
       views: {
         'menuContent': {
-          templateUrl: 'templates/messages.html',
+          //templateUrl: 'templates/messages.html',
+          templateUrl: localStorage.serverurl+'client/'+'templates/messages.html?t='+(new Date().getTime()),
           controller: 'MessagesCtrl'
         }
       }
@@ -198,7 +230,8 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
     url: '/chats/group/:deptId:deptName',
       views: {
         'menuContent': {
-          templateUrl: 'templates/chatgroupinfo.html',
+          //templateUrl: 'templates/chatgroupinfo.html',
+          templateUrl: localStorage.serverurl+'client/'+'templates/chatgroupinfo.html?t='+(new Date().getTime()),
           controller: 'ChatGroupCtrl'
         }
       }
@@ -210,7 +243,8 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
     //cache: true,
     views: {
       'menuContent': {
-        templateUrl: 'templates/message.html',
+        //templateUrl: 'templates/message.html',
+        templateUrl: localStorage.serverurl+'client/'+'templates/message.html?t='+(new Date().getTime()),
         controller: 'MessageCtrl'
       }
     }

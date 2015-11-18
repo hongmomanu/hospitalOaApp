@@ -64,7 +64,7 @@
     (.$on $rootScope "firealarm" (fn [event data] (println "firealarm")
 
 
-                                   (.show js/cordova.backgroundapp)
+
 
                                    (! $scope.alarmvoice.loop true)
 
@@ -72,14 +72,25 @@
 
                                    (! $scope.alarmuser data.data)
 
-                                   (-> (.fromTemplateUrl  $ionicModal "templates/alarmmodal.html" (obj
+                                   (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/"  "templates/alarmmodal.html" ) (obj
                                                                                          :scope $scope
                                                                                          )) (.then  (fn [modal] (
                                                                                                                    ! $scope.alarmmodal modal
                                                                                                                    )
                                                                                                        (.show $scope.alarmmodal)
 
+                                                                                                      (dorun (map #(-> (js/$ ".alarmbutton")
+                                                                                                         (.animate (obj :fontSize "5em") "slow")
+                                                                                                         (.animate (obj :fontSize "1em") "slow")
+                                                                                                         ) (range 1 20)))
+
                                                                                                        )))
+
+
+
+
+
+                                   (.show js/cordova.backgroundapp)
 
 
 
@@ -209,7 +220,7 @@
 
                                 (.remove $scope.alarmmodal)
 
-                                (! $scope.alarmmodal nil)
+                                ;(! $scope.alarmmodal nil)
 
 
                                   )
@@ -230,7 +241,7 @@
                                )(do
 
                                   (! $scope.videochaturl (.trustAsResourceUrl $sce (str js/videorurl "?handle=" res.data.toid)))
-                                                (if (nil? $scope.videochatmodal) (-> (.fromTemplateUrl  $ionicModal "templates/videochatmodal.html" (obj
+                                                (if (nil? $scope.videochatmodal) (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/" "templates/videochatmodal.html") (obj
                                                                                          :scope $scope
                                                                                          )) (.then  (fn [modal] (
                                                                                                                    ! $scope.videochatmodal modal

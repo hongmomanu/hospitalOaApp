@@ -59,7 +59,7 @@
                                 (! $scope.barcodetitle title)
 
 
-                                (-> (.fromTemplateUrl  $ionicModal "templates/barcodemodal.html" (obj :scope $scope
+                                (-> (.fromTemplateUrl  $ionicModal (str  js/localStorage.serverurl "client/" "templates/barcodemodal.html") (obj :scope $scope
                                                                        )) (.then  (fn [modal] (
                                                                                                  ! $scope.barcodemodal modal
                                                                                                  )

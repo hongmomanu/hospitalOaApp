@@ -334,7 +334,7 @@
 
                            (! $scope.imagesrc imageurl)
                            (! $scope.zoomMin  1)
-                           (-> (.fromTemplateUrl  $ionicModal "templates/imagemodal.html" (obj :scope $scope
+                           (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/" "templates/imagemodal.html") (obj :scope $scope
                                                                        )) (.then  (fn [modal] (
                                                                                                  ! $scope.imagemodal modal
                                                                                                  )
@@ -452,9 +452,9 @@
 
                                     (if (js->clj response.data.success)
                                       (do
-                                        (.push $scope.messages (obj  :content (str "<p>"   $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname (.date js/$.format (new js/Date) "M-dd hh:mm") "</a>")))
+                                        (.push $scope.messages (obj :time response.data.data.time :content (str "<p>"   $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname (.date js/$.format (new js/Date) "M-dd hh:mm") "</a>")))
 
-                                        (println $scope.messages)
+
 
                                         (! $scope.messagetext "")
 

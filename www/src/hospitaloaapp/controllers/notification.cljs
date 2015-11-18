@@ -374,7 +374,7 @@
 
                            (! $scope.imagesrc imageurl)
                            (! $scope.zoomMin  1)
-                           (-> (.fromTemplateUrl  $ionicModal "templates/imagemodal.html" (obj :scope $scope
+                           (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/" "templates/imagemodal.html") (obj :scope $scope
                                                                        )) (.then  (fn [modal] (
                                                                                                  ! $scope.imagemodal modal
                                                                                                  )
@@ -501,7 +501,7 @@
     ($scope.getpersons)
 
     (! $scope.showpersons (fn[]
-            (if (nil? $scope.topersonsmodal) (-> (.fromTemplateUrl  $ionicModal "templates/notificationpersonsmodal.html" (obj :scope $scope
+            (if (nil? $scope.topersonsmodal) (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/" "templates/notificationpersonsmodal.html" ) (obj :scope $scope
                                                                        )) (.then  (fn [modal] (
                                                                                                  ! $scope.topersonsmodal modal
                                                                                                  )
@@ -546,11 +546,11 @@
 
     (! $scope.addnotification (fn [msgtype]
 
-                           (println    ($scope.getchecked))
+
                            (if (or (nil? $scope.messagetext) (= $scope.messagetext ""))
 
                              (.alert $ionicPopup (obj :title "提示" :template "消息不能为空"))(let [toids (clj->js ($scope.getchecked))]
-                                    (println toids)
+
                                     (.show $ionicLoading (obj :template "传输中..."  :duration 5000))
                            (-> NotificationService
                            (.addnotification (str "<p>" $scope.messagetext "</p>") msgtype js/localStorage.userid toids  js/localStorage.realname)
@@ -561,9 +561,9 @@
 
                                     (if (js->clj response.data.success)
                                       (do
-                                        (.push $scope.messages (obj  :content (str "<p>"   $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname (.date js/$.format (new js/Date) "M-dd hh:mm") "</a>")))
+                                        (.push $scope.messages (obj :time (.date js/$.format (new js/Date) "yyyy-M-ddTH:mm:ssZ")  :content (str "<p>"   $scope.messagetext "</p>") :local true :realname (str "<a>" js/localStorage.realname (.date js/$.format (new js/Date) "M-dd hh:mm") "</a>")))
 
-                                        (println $scope.messages)
+
 
                                         (! $scope.messagetext "")
 

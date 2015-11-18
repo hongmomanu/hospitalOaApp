@@ -1,84 +1,11 @@
-<ion-view title="设置">
+<ion-view title="{{title}}">
   <ion-content class="has-header">
 
 <ul class="list">
 
-  <label class="item item-input item-label">
-    <span class="input-label">Hours per week</span>
-    <input type="text" value="37.5">
-  </label>
-
-  <label class="item item-input item-label">
-    <span class="input-label">Days per week</span>
-    <input type="text" value="5">
-  </label>
-
-  <label class="item item-input item-label">
-    <span class="input-label">Pension Contribution</span>
-    <input type="text">
-  </label>
-
-  <label class="item item-input item-select">
-    <div class="input-label">
-      Age
-    </div>
-    <select>
-      <option selected>Under 65</option>
-      <option>65-74</option>
-      <option>75+</option>
-    </select>
-  </label>
-
-  <label class="item item-input item-select">
-    <div class="input-label">
-      Weeks Option
-    </div>
-    <select>
-      <option selected>Weekly</option>
-      <option>2 Weeks</option>
-      <option>4 Weeks</option>
-    </select>
-  </label>
-
-      <li class="item item-toggle">
-     National Insurance
-     <label class="toggle toggle-positive">
-       <input type="checkbox" value="on">
-       <div class="track">
-         <div class="handle"></div>
-       </div>
-     </label>
-  </li>
-
-  <li class="item item-toggle">
-     Student Loan
-     <label class="toggle toggle-positive">
-       <input type="checkbox">
-       <div class="track">
-         <div class="handle"></div>
-       </div>
-     </label>
-  </li>
-
-   <li class="item item-toggle">
-     Registered Blind
-     <label class="toggle toggle-positive">
-       <input type="checkbox">
-       <div class="track">
-         <div class="handle"></div>
-       </div>
-     </label>
-  </li>
-
-      <li class="item item-toggle">
-     Married
-     <label class="toggle toggle-positive">
-       <input type="checkbox">
-       <div class="track">
-         <div class="handle"></div>
-       </div>
-     </label>
-  </li>
+  <button class="button button-block button-assertive" ng-click="showalterpassview()">
+           修改密码
+  </button>
 
 </ul>
 

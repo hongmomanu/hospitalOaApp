@@ -43,17 +43,12 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
     cordova.plugins.backgroundMode.enable();
 
 
+    /**
+      setInterval(function () {
 
-     setInterval(function () {
+      //cordova.backgroundapp.show()
 
-      //cordova.backgroundapp.show();
-       if(socketobj&&socketobj.readyState!= 1){
-
-          socketobj.send({msg : "heartbig"})
-
-       }
-
-      }, 10000)
+      }, 10000)**/
 
 
 

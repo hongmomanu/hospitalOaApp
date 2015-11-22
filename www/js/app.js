@@ -33,6 +33,10 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
       StatusBar.styleDefault();
     }
 
+    if (window.device.platform === 'iOS') {
+      cordova.plugins.iosrtc.registerGlobals();
+    }
+
     cordova.plugins.backgroundMode.setDefaults(
       { title:'医院OA',
         ticker:'医院OA正在后台运行',
@@ -41,6 +45,26 @@ angular.module('starter', ['ionic','angularFileUpload','mn','ion-tree-list', 'st
 
     );
     cordova.plugins.backgroundMode.enable();
+
+
+    document.addEventListener("resume", onResume, false);
+
+    function onResume() {
+
+        $.ajax({
+                url: localStorage.serverurl+"hellohospitaloa",
+                success: function(data){
+                    //alert(1);
+                },
+                error:function(data){
+                    //socketobj.close();
+                     //alert("网络断开");
+                },
+                timeout: 3000
+            });
+
+
+    }
 
 
     /**

@@ -14,7 +14,7 @@
   (obj
     :getdepts (fn []
                 (-> $http
-                  (.get (str js/serverurl "getdepts") )
+                  (.get (str js/serverurl "getdepts?t=" (rand-int 1000)) )
                   (.then (fn [response] response))))
 
 

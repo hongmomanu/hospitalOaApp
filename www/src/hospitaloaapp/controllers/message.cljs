@@ -14,7 +14,7 @@
   (obj
     :addmessage (fn [content ftype fromid toid groupid mtype toname fromname]
                 (-> $http
-                  (.post (str js/serverurl "addmessage") (obj :content content :ftype ftype
+                  (.post (str js/serverurl "addmessage?t=" (rand-int 1000)) (obj :content content :ftype ftype
                                                               :fromid fromid :toid toid
                                                               :toname toname :fromname fromname
                                                               :groupid groupid :mtype mtype))
@@ -25,7 +25,7 @@
 
    :addgroupmessage (fn [content ftype fromid toid groupid mtype toname fromname]
                 (-> $http
-                  (.post (str js/serverurl "addgroupmessage") (obj :content content :ftype ftype
+                  (.post (str js/serverurl "addgroupmessage?t=" (rand-int 1000)) (obj :content content :ftype ftype
                                                               :fromid fromid :toid toid
                                                               :toname toname :fromname fromname
                                                               :groupid groupid :mtype mtype))
@@ -37,7 +37,7 @@
    :getmessagehistory (fn [fromid toid lasttime]
 
                  (-> $http
-                  (.post (str js/serverurl "getmessagehistory") (obj
+                  (.post (str js/serverurl "getmessagehistory?t=" (rand-int 1000)) (obj
                                                               :fromid fromid :toid toid
                                                               :time lasttime))
                   (.then (fn [response] response))
@@ -50,7 +50,7 @@
    :getgroupmessagehistory (fn [fromid groupid lasttime]
 
                  (-> $http
-                  (.post (str js/serverurl "getgroupmessagehistory") (obj
+                  (.post (str js/serverurl "getgroupmessagehistory?t=" (rand-int 1000)) (obj
                                                               :fromid fromid :groupid groupid
                                                               :time lasttime))
                   (.then (fn [response] response))
@@ -62,7 +62,7 @@
    :firechatvideo (fn [fromid toid ]
 
                  (-> $http
-                  (.post (str js/serverurl "firechatvideo") (obj
+                  (.post (str js/serverurl "firechatvideo?t=" (rand-int 1000)) (obj
                                                               :fromid fromid :toid toid))
                   (.then (fn [response] response))
                   (.catch (fn[response] response))
@@ -74,7 +74,7 @@
    :firechatarrived (fn [fromid toid ischating]
 
                  (-> $http
-                  (.post (str js/serverurl "firechatarrived") (obj
+                  (.post (str js/serverurl "firechatarrived?t=" (rand-int 1000)) (obj
                                                               :fromid fromid :toid toid :ischating ischating))
                   (.then (fn [response] response))
                   (.catch (fn[response] response))
@@ -86,7 +86,7 @@
    :firechatend (fn [fromid toid]
 
                  (-> $http
-                  (.post (str js/serverurl "firechatend") (obj
+                  (.post (str js/serverurl "firechatend?t=" (rand-int 1000)) (obj
                                                               :fromid fromid :toid toid ))
                   (.then (fn [response] response))
                   (.catch (fn[response] response))
@@ -187,6 +187,8 @@
                            (.show $scope.videochatmodal)
 
                            )
+
+                         #_(.open js/cordova.InAppBrowser "" "_self" )
 
                          (set! js/isvideochating true)
 
@@ -298,7 +300,8 @@
                                            "audio"  (do (println "audio")
 
                                                       ($timeout (fn []
-                                                                (! $scope.messagetext (str "<audio width=\"100%\" height=\"100%\" preload=\"auto\"  controls=\"controls\" src=\"" js/serverurl "files/"
+                                                                (! $scope.messagetext (str "<audio  ng-click=\"showiosplay('" js/serverurl "files/"
+                                                                               response.filename "')\"   controls=\"controls\" src=\"" js/serverurl "files/"
                                                                                response.filename "\"></audio>")
 
                                                                  )
@@ -423,14 +426,108 @@
     (! $scope.mediasream nil)
     (! $scope.recordRTC nil)
 
+    (! $scope.showiosplay (fn[voiceurl]
+
+                            (when (= js/window.device.platform "iOS")
+
+
+                              (let [
+                                    myMedia (new js/Media voiceurl)
+                                    ]
+
+                                (.play myMedia)
+                                )
+
+
+                              )
+
+                            )
+
+       )
+
+    (! $scope.startrecordvoiceios (fn[]
+
+
+
+                                    (js/window.requestFileSystem  js/LocalFileSystem.PERSISTENT  (* 5 1024 1024)
+                                       (fn[fileSystem]
+                                         ;(js/alert fileSystem)
+                                         (js/resolveLocalFileSystemURL js/cordova.file.cacheDirectory
+                                                                       (fn [dirEntry]
+                                                                           (.getFile dirEntry "blank.wav" (obj :create true :exclusive false)
+                             (fn[fileEntry]
+                               ;(js/alert (.toInternalURL fileEntry)) toURL
+                               (! $scope.voicerecordsrc (.toInternalURL fileEntry))
+                               (! $scope.mediaRec  (new js/Media $scope.voicerecordsrc
+                                                        (fn [] )
+                                                        (fn[error]
+                                                          (js/alert "mediaRecerror")
+                                                          )))
+
+                                (.startRecord $scope.mediaRec)
+
+
+                               ) (fn[]))
+
+
+
+
+                                                                                                      ))
+
+
+
+
+                                                                                                  )
+
+                                                                  (fn[]
+                                                                              (js/alert "error")
+                                                                                                       ))
+
+                                    ))
+
+
+    (! $scope.stoprecordvoiceios (fn[]
+
+                                    (js/alert "iosend")
+
+                                    (.stopRecord $scope.mediaRec)
+                                    (.release $scope.mediaRec)
+                                   (let [
+                                                 options (new js/FileUploadOptions)
+                                                 ft (new js/FileTransfer)
+                                                 fileurl $scope.voicerecordsrc
+                                                 ]
+                                             (js/alert fileurl)
+                                             (! options.fileKey "file")
+                                             (! options.fileName (.substr fileurl (+ (.lastIndexOf fileurl "/") 1)))
+                                             (.upload ft fileurl (js/encodeURI (str js/serverurl "uploadfile"))
+                                                      (fn[suc](let [response (.parse js/JSON suc.response)]
+                                                            (if response.success (do
+                                                                                   (! $scope.messagetext (str "<audio type=\"audio/wav\"  ng-click=\"showiosplay('" js/serverurl "files/"
+                                                                               response.filename "')\"   controls=\"controls\" src=\"" js/serverurl "files/"
+                                                                               response.filename "\"></audio>"))
+
+                                                                                  ( $scope.addnotification "audio")
+
+
+                                                                                   ) (.alert $ionicPopup (obj :title "传输失败" :template "网络错误")))
+
+                                                                )) (fn[err](.alert $ionicPopup (obj :title "传输失败" :template "网络错误"))) options )
+                                             )
+
+
+
+                                    ))
+
      (! $scope.startrecordvoice (fn [](do
 
 
                               (println "startrecording")
 
+                               (if (= js/window.device.platform "iOS")
+                                   ($scope.startrecordvoiceios)
 
-
-                               (let [
+                                 (let [
                                      commonConfig (obj :onMediaCaptured (fn [stream]
 
                                                                           (println "onMediaCaptured")
@@ -473,6 +570,10 @@
 
                                  )
 
+                                 )
+
+
+
                                 (.show $ionicLoading (obj :template "正在录音,松开完成") )
 
 
@@ -490,8 +591,11 @@
 
                                (.hide $ionicLoading)
                               (println "stoprecordvoice")
-                              (.stopRecording $scope.recordRTC (fn [url]
-                                                                 (println url)
+                              (if (= js/window.device.platform "iOS")
+
+                                   ($scope.stoprecordvoiceios)
+                                (.stopRecording $scope.recordRTC (fn [url]
+
 
                                                                  (let [blob $scope.recordRTC.blob
                                                                         fileType "audio"
@@ -499,10 +603,10 @@
                                                                         formData  (new js/FormData)
 
                                                                        ]
-                                                                   (println  "blob" blob)
+
                                                                    (.append formData "filename" fileName)
                                                                    (.append formData "file" blob)
-                                                                   (println  "hahahaha")
+
 
 
                                                                    ($scope.makeXMLHttpRequest (str js/serverurl "uploadfile") formData
@@ -513,7 +617,8 @@
                                                                                                                   response (.parse js/JSON msg)
                                                                                                                   ]
 
-                                                                                                              (! $scope.messagetext (str "<audio width=\"100%\" height=\"100%\" preload=\"auto\"  controls=\"controls\" src=\"" js/serverurl "files/"
+                                                                                                              (! $scope.messagetext (str "<audio  ng-click=\"showiosplay('" js/serverurl "files/"
+                                                                               response.filename "')\"   controls=\"controls\" src=\"" js/serverurl "files/"
                                                                                response.filename "\"></audio>"))
                                                                                                               ( $scope.addmessage "audio")
                                                                                                               )
@@ -525,6 +630,10 @@
                                                                  (.stop $scope.mediasream stop)
 
                                                                  ))
+
+
+                                )
+
 
 
                               )))

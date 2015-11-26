@@ -23,11 +23,12 @@
         <button class="button button-clear button-icon ion-document-text button-positive" ng-click="addfiles()"></button>
         <label class="item-input-wrapper">
         <i   class="icon ion-ios-compose placeholder-icon"></i>
-        <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="...">
-        <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="groupmsgfiles"  />
+            <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="..." />
+
 
         <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>-->
         </label>
+         <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="groupmsgfiles"  />
         <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addmessage('text')">发送</button>
     </ion-footer-bar>
 

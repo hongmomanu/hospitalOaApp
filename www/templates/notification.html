@@ -24,11 +24,12 @@
         <button class="button button-clear button-icon ion-android-person-add button-positive" ng-click="showpersons()"></button>
         <label class="item-input-wrapper">
         <i   class="icon ion-ios-compose placeholder-icon"></i>
-        <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="...">
-        <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="notificationmsgfiles"  />
+            <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="..." />
+
 
         <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i>  ng-bind-html="trustHtml(message.realname +message.content)"-->
         </label>
+        <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="notificationmsgfiles"  />
 
         <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addnotification('text')">发送</button>
     </ion-footer-bar>

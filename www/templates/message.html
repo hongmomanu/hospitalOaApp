@@ -16,19 +16,16 @@
         </ol>
     </ion-content>
 
-    <ion-footer-bar class="bar-frosted">
+    <ion-footer-bar class="bar-frosted ">
         <button class="button button-clear button-icon ion-images button-positive" ng-click="addimage()"></button>
         <button class="button button-clear button-icon ion-mic-a button-positive" on-touch="startrecordvoice()" on-release="stoprecordvoice()" ></button>
         <button class="button button-clear button-icon ion-videocamera button-positive" ng-click="addvideo()"></button>
         <button class="button button-clear button-icon ion-document-text button-positive" ng-click="addfiles()"></button>
+        <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="personmsgfiles"  />
         <label class="item-input-wrapper">
-        <i   class="icon ion-ios-compose placeholder-icon"></i>
-        <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="...">
+        <i class="icon ion-ios-compose placeholder-icon"></i>
+        <input  style="width: 100%;" type="text" ng-model="messagetext"  placeholder="..." />
 
-
-            <input  type="file" nv-file-select="" uploader="uploader" style="display:none;" id="personmsgfiles"  />
-
-        <!--<i ng-click="doSearch()"  class="icon ion-ios-search"></i> ng-bind-html="trustHtml(message.realname +message.content)"-->
         </label>
         <button class="button button-clear button-icon ion-paper-airplane button-positive" ng-click="addmessage('text')">发送</button>
     </ion-footer-bar>

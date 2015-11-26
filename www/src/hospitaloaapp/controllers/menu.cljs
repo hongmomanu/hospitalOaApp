@@ -72,7 +72,8 @@
 
                                    (! $scope.alarmuser data.data)
 
-                                   (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/"  "templates/alarmmodal.html" ) (obj
+                                   (if (nil? $scope.alarmmodal)
+                                     (-> (.fromTemplateUrl  $ionicModal (str js/localStorage.serverurl "client/"  "templates/alarmmodal.html" ) (obj
                                                                                          :scope $scope
                                                                                          )) (.then  (fn [modal] (
                                                                                                                    ! $scope.alarmmodal modal
@@ -85,6 +86,20 @@
                                                                                                          ) (range 1 20)))
 
                                                                                                        )))
+
+                                     (do
+
+                                        (.show $scope.alarmmodal)
+
+                                                                                                      (dorun (map #(-> (js/$ ".alarmbutton")
+                                                                                                         (.animate (obj :fontSize "5em") "slow")
+                                                                                                         (.animate (obj :fontSize "1em") "slow")
+                                                                                                         ) (range 1 20)))
+                                       )
+
+                                     )
+
+
 
 
 
